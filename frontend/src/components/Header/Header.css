@@ -1,0 +1,21 @@
+.appHeader {
+    background-color: #282c34;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.appHeader nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.appHeader nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.appHeader nav ul li a {
+    color: white;
+    text-decoration: none;
+}
