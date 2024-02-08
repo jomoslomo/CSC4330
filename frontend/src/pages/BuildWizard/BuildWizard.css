@@ -2,3 +2,28 @@
     text-align: center;
     padding: 20px;
 }
+
+.navigationButtons {
+    margin-top: 20px;
+}
+
+.navigationButtons button {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.navigationButtons button:hover {
+    background-color: #45a049; /* Darker shade of green */
+}
+
+/* Optionally, style for disabled state */
+.navigationButtons button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+}

@@ -10,6 +10,8 @@ function Header() {
                 <ul>
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/build">Build Wizard</Link></li>
+                    <li><Link to="/login">Login</Link></li>
+                    <li className="registerLink"><Link to="/register">Register</Link></li>
                     {/* Add more navigation links as needed */}
                 </ul>
             </nav>
