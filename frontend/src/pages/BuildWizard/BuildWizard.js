@@ -1,62 +1,78 @@
 import React, { useState } from 'react';
-import SelectCPU from '../../components/BuildWizardSteps/SelectCPU';
-import SelectMotherboard from '../../components/BuildWizardSteps/SelectMotherboard';
-import SelectRAM from '../../components/BuildWizardSteps/SelectRAM';
-import SelectStorage from '../../components/BuildWizardSteps/SelectStorage';
-import SelectGPU from '../../components/BuildWizardSteps/SelectGPU';
-import SelectPSU from '../../components/BuildWizardSteps/SelectPSU';
-import SelectCase from '../../components/BuildWizardSteps/SelectCase';
-import SelectAccessories from '../../components/BuildWizardSteps/SelectAccessories';
+import SelectPart from '../../components/BuildWizardSteps/SelectPart';
 import './BuildWizard.css';
 
 function BuildWizard() {
     const [currentStep, setCurrentStep] = useState(1);
+    const [selectedParts, setSelectedParts] = useState({
+        cpu: null,
+        motherboard: null,
+        ram: null,
+        storage: null,
+        gpu: null,
+        psu: null,
+        case: null,
+        // accessories: []
+    });
 
-    const nextStep = () => {
-        if (currentStep < 8) {
-            setCurrentStep(currentStep + 1);
-        }
-    };
+    const SelectedPartsSidebar = ({ selectedParts }) => (
+        <div className="selectedPartsSidebar">
+          <h2>Selected Parts</h2>
+          {Object.entries(selectedParts).map(([part, value]) => (
+            value && <div key={part}>{`${part.toUpperCase()}: ${value.name || value.map(v => v.name).join(', ')}`}</div>
+          ))}
+        </div>
+      );
+      
 
-    const prevStep = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        }
+    // Define part selection steps in an array or object for easier management
+    const steps = [
+        { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
+        { type: 'motherboard', fetchUrl: 'http://localhost:3001/motherboards', component: SelectPart },
+        { type: 'ram', fetchUrl: 'http://localhost:3001/memory', component: SelectPart },
+        { type: 'storage', fetchUrl: 'http://localhost:3001/storage', component: SelectPart },
+        { type: 'gpu', fetchUrl: 'http://localhost:3001/gpus', component: SelectPart },
+        { type: 'psu', fetchUrl: 'http://localhost:3001/psus', component: SelectPart },
+        { type: 'case', fetchUrl: 'http://localhost:3001/cases', component: SelectPart },
+        // { type: 'accessories', fetchUrl: 'http://localhost:3001/accessories', component: SelectPart }
+    ];
+    
+    const handleSelectPart = (part) => {
+        setSelectedParts(prevState => ({
+            ...prevState,
+            [steps[currentStep - 1].type]: part
+        }));
     };
 
     const renderStep = () => {
-        switch (currentStep) {
-            case 1:
-                return <SelectCPU />;
-            case 2:
-                return <SelectMotherboard />;
-            case 3:
-                return <SelectRAM />;
-            case 4:
-                return <SelectStorage />;
-            case 5:
-                return <SelectGPU />;
-            case 6:
-                return <SelectPSU />;
-            case 7:
-                return <SelectCase />;
-            case 8:
-                return <SelectAccessories />;
-            default:
-                return <div>Step not found</div>;
-        }
+        const stepConfig = steps[currentStep - 1];
+        if (!stepConfig) return <div>Step not found</div>;
+
+        return (
+            <>
+                <h2>Selecting: {stepConfig.type.toUpperCase()}</h2>
+                <SelectPart
+                    onSelect={handleSelectPart}
+                    currentSelection={selectedParts[stepConfig.type]}
+                    fetchUrl={stepConfig.fetchUrl}
+                    partType={stepConfig.type.toUpperCase()}
+                />
+            </>
+        );
     };
 
     return (
-        <div className="buildWizard">
-            <h1>PC Build Wizard</h1>
-            {renderStep()}
-            <div className="navigationButtons">
-                {currentStep > 1 && <button onClick={prevStep}>Previous</button>}
-                {currentStep < 8 && <button onClick={nextStep}>Next</button>}
-                {/* Optionally, add a submit or finish button on the last step */}
-                {currentStep === 8 && <button>Finish</button>}
+        <div className="buildWizardContainer">
+            <div className="buildWizard">
+                <h1>PC Build Wizard</h1>
+                {renderStep()}
+                <div className="navigationButtons">
+                    {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>Previous</button>}
+                    {currentStep < steps.length && <button onClick={() => setCurrentStep(currentStep + 1)}>Next</button>}
+                    {currentStep === steps.length && <button>Finish</button>}
+                </div>
             </div>
+            <SelectedPartsSidebar selectedParts={selectedParts} />
         </div>
     );
 }

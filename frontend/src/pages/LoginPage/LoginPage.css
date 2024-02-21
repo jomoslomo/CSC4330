@@ -1,21 +1,25 @@
 .loginPage {
-    max-width: 300px;
+    max-width: 400px;
     margin: auto;
     padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .formGroup {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .formGroup label {
     display: block;
+    margin-bottom: 5px;
 }
 
 .formGroup input {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 button {
@@ -24,9 +28,15 @@ button {
     background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 button:hover {
-    opacity: 0.9;
+    background-color: #0056b3;
+}
+
+.message {
+    margin-top: 20px;
+    color: red;
 }

@@ -1,14 +1,19 @@
 import React from 'react';
-import './SelectGPU.css';
+import SelectPart from './SelectPart';
 
-function SelectGPU({ onSelect }) {
-    // Add logic to select GPU here
+function SelectGPU({ onSelect, currentSelection }) {
+    const displayAttributes = [
+        'price', 'chipset', 'memory', 'core_clock', 'boost_clock', 'color', 'length'
+    ];
 
     return (
-        <div className="selectGPU">
-            <h2>Select Graphics Card (GPU)</h2>
-            {/* GPU selection options go here */}
-        </div>
+        <SelectPart
+            onSelect={onSelect}
+            currentSelection={currentSelection}
+            fetchUrl="http://localhost:3001/gpus"
+            displayAttributes={displayAttributes}
+            partType="GPU"
+        />
     );
 }
 

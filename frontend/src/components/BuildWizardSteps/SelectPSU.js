@@ -1,14 +1,19 @@
 import React from 'react';
-import './SelectPSU.css';
+import SelectPart from './SelectPart';
 
-function SelectPSU({ onSelect }) {
-    // Add logic to select PSU here
+function SelectPSU({ onSelect, currentSelection }) {
+    const displayAttributes = [
+        'price', 'type', 'efficiency', 'wattage', 'modular', 'color'
+    ];
 
     return (
-        <div className="selectPSU">
-            <h2>Select Power Supply Unit (PSU)</h2>
-            {/* PSU selection options go here */}
-        </div>
+        <SelectPart
+            onSelect={onSelect}
+            currentSelection={currentSelection}
+            fetchUrl="http://localhost:3001/psus"
+            displayAttributes={displayAttributes}
+            partType="PSU"
+        />
     );
 }
 

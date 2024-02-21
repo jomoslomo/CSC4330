@@ -1,14 +1,18 @@
 import React from 'react';
-import './SelectCPU.css';
+import SelectPart from './SelectPart'; // Adjust the import path as necessary
 
 function SelectCPU({ onSelect, currentSelection }) {
-    // Add logic to select CPU
+    // Define the attributes you want to display for CPUs
+    const displayAttributes = ['price', 'cores', 'baseClock'];
 
     return (
-        <div className="selectCPU">
-            <h2>Select Your Processor (CPU)</h2>
-            {/* Add CPU selection options here */}
-        </div>
+        <SelectPart
+            onSelect={onSelect}
+            currentSelection={currentSelection}
+            fetchUrl="http://localhost:3001/cpus" // Your backend endpoint for CPUs
+            displayAttributes={displayAttributes}
+            partType="CPU" // This is used for dynamic labeling and potentially for specific styling or logic
+        />
     );
 }
 

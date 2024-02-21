@@ -1,6 +1,18 @@
+.buildWizardContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
 .buildWizard {
     text-align: center;
     padding: 20px;
+    flex-grow: 1;
+}
+
+.selectedPartsSidebar {
+    width: 300px; /* Adjust as needed */
+    padding: 20px;
+    border-left: 1px solid #ccc; /* Aesthetic border */
 }
 
 .navigationButtons {
@@ -8,7 +20,7 @@
 }
 
 .navigationButtons button {
-    background-color: #4CAF50; /* Green background */
+    background-color: #4CAF50; /* Green */
     color: white;
     padding: 10px 20px;
     margin: 5px;
@@ -19,11 +31,7 @@
 }
 
 .navigationButtons button:hover {
-    background-color: #45a049; /* Darker shade of green */
+    background-color: #45a049;
 }
 
-/* Optionally, style for disabled state */
-.navigationButtons button:disabled {
-    background-color: #cccccc;
-    color: #666666;
-}
+/* Add styles for the selectedPartsSidebar if needed */

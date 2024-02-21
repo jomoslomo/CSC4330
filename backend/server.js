@@ -3,11 +3,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 const PORT = 3001;
+let db; 
 
+// Replace this URI with your actual connection string and ensure your credentials are secure
 const uri = "mongodb+srv://jomo:jomo@cluster0.wiikuok.mongodb.net/";
 const client = new MongoClient(uri, {
     serverApi: ServerApiVersion.v1
@@ -16,8 +18,25 @@ const client = new MongoClient(uri, {
 app.use(cors());
 app.use(bodyParser.json());
 
-// Replace 'your_jwt_secret' with a real secret key stored safely
+// Replace 'your_jwt_secret' with a real secret key stored securely, ideally in environment variables
 const jwtSecret = '1234';
+
+// Middleware to verify the token
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+        const token = authHeader.split(' ')[1]; // Authorization: Bearer <token>
+        jwt.verify(token, jwtSecret, (err, user) => {
+            if (err) {
+                return res.sendStatus(403); // Forbidden
+            }
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401); // Unauthorized
+    }
+};
 
 async function run() {
     try {
@@ -32,7 +51,6 @@ async function run() {
             const hashedPassword = await bcrypt.hash(password, 10);
             
             const usersCollection = db.collection('users');
-
             const existingUser = await usersCollection.findOne({ username });
             if (existingUser) {
                 return res.status(400).json({ message: "User already exists" });
@@ -47,7 +65,6 @@ async function run() {
             const { username, password } = req.body;
             
             const usersCollection = db.collection('users');
-
             const user = await usersCollection.findOne({ username });
             if (user && await bcrypt.compare(password, user.password)) {
                 const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
@@ -57,9 +74,82 @@ async function run() {
             }
         });
 
+        // User info endpoint
+        app.get('/user-info', verifyToken, async (req, res) => {
+            try {
+                const userId = req.user.userId;
+                const user = await db.collection('users').findOne({ "_id": new ObjectId(userId) });
+                if (!user) {
+                    return res.status(404).json({ message: "User not found" });
+                }
+
+                const userInfo = {
+                    username: user.username,
+                    // Add any other user details you want to return here
+                };
+
+                res.json(userInfo);
+            } catch (error) {
+                console.error("Failed to retrieve user info", error);
+                res.status(500).json({ message: "Failed to get user information" });
+            }
+        });
+
     } catch (error) {
         console.error("Could not connect to MongoDB", error);
     }
+
+    db = client.db("csc4330"); // Assign db here
+
+    // Fetch all CPUs
+app.get('/cpus', async (req, res) => {
+    const collection = db.collection('cpus');
+    const cpus = await collection.find({}).toArray();
+    res.json(cpus);
+});
+
+// Fetch all GPUs
+app.get('/gpus', async (req, res) => {
+    const collection = db.collection('gpus');
+    const gpus = await collection.find({}).toArray();
+    res.json(gpus);
+});
+
+// Fetch all Memory
+app.get('/memory', async (req, res) => {
+    const collection = db.collection('memory');
+    const memory = await collection.find({}).toArray();
+    res.json(memory);
+});
+
+// Fetch all Motherboards
+app.get('/motherboards', async (req, res) => {
+    const collection = db.collection('motherboards');
+    const motherboards = await collection.find({}).toArray();
+    res.json(motherboards);
+});
+
+// Fetch all PSUs
+app.get('/psus', async (req, res) => {
+    const collection = db.collection('psus');
+    const psus = await collection.find({}).toArray();
+    res.json(psus);
+});
+
+// Fetch all Cases
+app.get('/cases', async (req, res) => {
+    const collection = db.collection('cases');
+    const cases = await collection.find({}).toArray();
+    res.json(cases);
+});
+
+// Fetch all Internal HDDs
+app.get('/internal-hdds', async (req, res) => {
+    const collection = db.collection('internal-hdd');
+    const internalHDDs = await collection.find({}).toArray();
+    res.json(internalHDDs);
+});
+
 }
 
 app.listen(PORT, () => {

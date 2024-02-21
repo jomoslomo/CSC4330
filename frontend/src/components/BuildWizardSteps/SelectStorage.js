@@ -1,14 +1,19 @@
 import React from 'react';
-import './SelectStorage.css';
+import SelectPart from './SelectPart';
 
-function SelectStorage({ onSelect }) {
-    // Add logic to select Storage here
+function SelectStorage({ onSelect, currentSelection }) {
+    const displayAttributes = [
+        'price', 'capacity', 'price_per_gb', 'type', 'cache', 'form_factor', 'interface'
+    ];
 
     return (
-        <div className="selectStorage">
-            <h2>Select Storage</h2>
-            {/* Storage selection options go here */}
-        </div>
+        <SelectPart
+            onSelect={onSelect}
+            currentSelection={currentSelection}
+            fetchUrl="http://localhost:3001/internal-hdd"
+            displayAttributes={displayAttributes}
+            partType="Internal HDD"
+        />
     );
 }
 

@@ -6,6 +6,7 @@ import BuildWizard from './pages/BuildWizard/BuildWizard';
 import Header from './components/Header/Header'; // If you have a Header component
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
+import UserDashboard from './pages/UserDashboard/UserDashboard';
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
         <Route path="/build" element={<BuildWizard />} />
         <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
         <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
 
         {/* Add more routes as needed */}
       </Routes>

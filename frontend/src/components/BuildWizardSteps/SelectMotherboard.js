@@ -1,14 +1,19 @@
 import React from 'react';
-import './SelectMotherboard.css';
+import SelectPart from './SelectPart';
 
-function SelectMotherboard({ onSelect }) {
-    // Add logic to select Motherboard here
+function SelectMotherboard({ onSelect, currentSelection }) {
+    const displayAttributes = [
+        'price', 'socket', 'form_factor', 'max_memory', 'memory_slots', 'color'
+    ];
 
     return (
-        <div className="selectMotherboard">
-            <h2>Select Motherboard</h2>
-            {/* Motherboard selection options go here */}
-        </div>
+        <SelectPart
+            onSelect={onSelect}
+            currentSelection={currentSelection}
+            fetchUrl="http://localhost:3001/motherboards"
+            displayAttributes={displayAttributes}
+            partType="Motherboard"
+        />
     );
 }
 

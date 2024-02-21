@@ -1,0 +1,35 @@
+.partContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.partCard {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.partCard:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.partCard h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.partCard p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #666;
+}

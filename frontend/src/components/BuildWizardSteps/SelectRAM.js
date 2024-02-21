@@ -1,14 +1,19 @@
 import React from 'react';
-import './SelectRAM.css';
+import SelectPart from './SelectPart';
 
-function SelectRAM({ onSelect }) {
-    // Add logic to select RAM here
+function SelectRAM({ onSelect, currentSelection }) {
+    const displayAttributes = [
+        'price', 'speed', 'modules', 'price_per_gb', 'color', 'first_word_latency', 'cas_latency'
+    ];
 
     return (
-        <div className="selectRAM">
-            <h2>Select Memory (RAM)</h2>
-            {/* RAM selection options go here */}
-        </div>
+        <SelectPart
+            onSelect={onSelect}
+            currentSelection={currentSelection}
+            fetchUrl="http://localhost:3001/memory"
+            displayAttributes={displayAttributes}
+            partType="Memory"
+        />
     );
 }
 

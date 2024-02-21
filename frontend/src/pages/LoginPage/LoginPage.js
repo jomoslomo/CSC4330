@@ -1,15 +1,39 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
 function LoginPage() {
+    const navigate = useNavigate(); // Initialize navigate
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Login with:', username, password);
-        // You might want to call an API endpoint from your backend server here
+
+        try {
+            const response = await fetch('http://localhost:3001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Login successful', data);
+                setMessage('Login successful');
+                localStorage.setItem('token', data.token); // Save the token
+                navigate('/dashboard'); // Redirect to the dashboard
+            } else {
+                console.log('Login failed', data.message);
+                setMessage(data.message || 'An error occurred during login');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            setMessage('Failed to login');
+        }
     };
 
     return (
@@ -22,6 +46,7 @@ function LoginPage() {
                         type="text" 
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
+                        required 
                     />
                 </div>
                 <div className="formGroup">
@@ -30,9 +55,11 @@ function LoginPage() {
                         type="password" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
+                        required 
                     />
                 </div>
                 <button type="submit">Login</button>
+                {message && <div className="message">{message}</div>} {/* Display messages to the user */}
             </form>
         </div>
     );
