@@ -156,3 +156,28 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     run().catch(console.dir);
 });
+
+//Password Reset
+
+// Express route for handling password reset requests
+app.post('/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    // Find the user by the token in the database
+    const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
+
+    if (!user) {
+        return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
+    res.json({ message: 'Password reset successful' });
+});
