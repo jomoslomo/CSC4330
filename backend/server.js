@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
@@ -38,6 +40,35 @@ const verifyToken = (req, res, next) => {
     }
 };
 
+
+// Create a Nodemailer transporter
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'dreamsbuilding508@gmail.com', // Your Gmail email address
+        pass: 'apdk izdt hdei onch ' // Your Gmail password or application-specific password
+    }
+});
+
+// Function to send email
+async function sendEmail(recipient, subject, message) {
+    try {
+        // Send mail with defined transport object
+        let info = await transporter.sendMail({
+            from: '"Your Application" <dreamsbuilding508@gmail.com>',
+            to: recipient,
+            subject: subject,
+            text: message
+        });
+        console.log('Message sent: %s', info.messageId);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+
+// Test usage
+//sendEmail('recipient@example.com', 'Test Email', 'This is a test email from Node.js')
+
 async function run() {
     try {
         await client.connect();
@@ -47,7 +78,7 @@ async function run() {
 
         // Register endpoint
         app.post('/register', async (req, res) => {
-            const { username, password } = req.body;
+            const { username, password, email } = req.body;
             const hashedPassword = await bcrypt.hash(password, 10);
             
             const usersCollection = db.collection('users');
@@ -56,8 +87,12 @@ async function run() {
                 return res.status(400).json({ message: "User already exists" });
             }
 
-            await usersCollection.insertOne({ username, password: hashedPassword });
+            await usersCollection.insertOne({ username, password: hashedPassword, email });
             res.status(201).json({ message: 'User created successfully' });
+            // Send registration confirmation email
+            sendEmail(email, 'Registration Confirmation', 'Thank you for registering with our application.');
+
+
         });
 
         // Login endpoint
@@ -95,6 +130,29 @@ async function run() {
             }
         });
 
+        // Express route for handling password reset requests
+        app.post('/reset-password', async (req, res) => {
+            const { token, newPassword } = req.body;
+
+            // Find the user by the token in the database
+            const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
+
+            if (!user) {
+                return res.status(400).json({ message: 'Invalid or expired token' });
+            }
+
+            // Hash the new password
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Update the user's password
+            user.password = hashedPassword;
+            user.resetToken = undefined;
+            user.resetTokenExpiry = undefined;
+            await user.save();
+            
+
+            res.json({ message: 'Password reset successful' });
+        });
     } catch (error) {
         console.error("Could not connect to MongoDB", error);
     }
@@ -155,29 +213,4 @@ app.get('/internal-hdds', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     run().catch(console.dir);
-});
-
-//Password Reset
-
-// Express route for handling password reset requests
-app.post('/reset-password', async (req, res) => {
-    const { token, newPassword } = req.body;
-
-    // Find the user by the token in the database
-    const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
-
-    if (!user) {
-        return res.status(400).json({ message: 'Invalid or expired token' });
-    }
-
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update the user's password
-    user.password = hashedPassword;
-    user.resetToken = undefined;
-    user.resetTokenExpiry = undefined;
-    await user.save();
-
-    res.json({ message: 'Password reset successful' });
 });
