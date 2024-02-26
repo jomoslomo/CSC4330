@@ -25,6 +25,8 @@ function LoginPage() {
                 console.log('Login successful', data);
                 setMessage('Login successful');
                 localStorage.setItem('token', data.token); // Save the token
+                // Dispatch custom login event
+                window.dispatchEvent(new CustomEvent('login', { detail: data }));
                 navigate('/dashboard'); // Redirect to the dashboard
             } else {
                 console.log('Login failed', data.message);

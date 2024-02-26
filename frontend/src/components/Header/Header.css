@@ -1,21 +1,60 @@
 .appHeader {
     background-color: #282c34;
     color: white;
-    text-align: center;
     padding: 10px 0;
+    text-align: center;
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px; /* Adjust based on your layout */
 }
 
 .appHeader nav ul {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    margin: 0; /* Aligns navigation to the left or center */
 }
 
 .appHeader nav ul li {
-    display: inline;
     margin-right: 20px;
 }
 
 .appHeader nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.userDashboard {
+    display: flex;
+    align-items: center;
+    /* Add any specific styles for spacing or alignment */
+}
+
+.userDashboard span, .userDashboard a {
+    margin-left: 20px; /* Adjust spacing between Welcome message and Logout link */
+    color: white; /* Ensure consistent text color */
+    cursor: pointer; /* Optional for the span if it acts as a link */
+}
+
+/* Ensure links have consistent styling */
+.userDashboard a {
+    text-decoration: none;
+    color: white; /* Adjust as needed */
+}
+/* Existing styles... */
+
+.authLinks {
+    display: flex;
+    align-items: center;
+    /* Any additional styling for spacing or alignment */
+}
+
+.authLinks a {
+    margin-left: 20px; /* Adjust spacing between links as needed */
     color: white;
     text-decoration: none;
 }

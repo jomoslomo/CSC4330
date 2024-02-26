@@ -16,7 +16,7 @@ function UserDashboard() {
                 if (response.ok) {
                     const data = await response.json();
                     setUserInfo(data);
-                } else {
+                } else { 
                     console.error('Failed to fetch user info');
                     // Handle failure (e.g., redirect to login page or display an error)
                 }
