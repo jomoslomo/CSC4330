@@ -17,11 +17,8 @@ function UserDashboard() {
                 if (response.ok) {
                     const data = await response.json();
                     setUserInfo(data);
-<<<<<<< HEAD
-=======
                     fetchUserBuilds(token);
->>>>>>> 2490b99 (updated user dashboard and added functionality to save builds)
-                } else {
+                } else { 
                     console.error('Failed to fetch user info');
                 }
             } catch (error) {

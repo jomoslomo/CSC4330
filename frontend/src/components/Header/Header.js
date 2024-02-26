@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Header.css'; // Assume you have some basic CSS in Header.css
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
     const [userInfo, setUserInfo] = useState(null);
@@ -57,7 +57,32 @@ function Header() {
     const redirectToDashboard = () => {
         navigate('/dashboard');
     };
+    return (
+<header className="appHeader">
+    <h1>Building Dreams</h1>
+    <div className="headerContent">
+        <nav>
+            <ul>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/build">Build Wizard</Link></li>
+                {/* Other navigation links */}
+            </ul>
+        </nav>
+        {userInfo ? (
+            <div className="authLinks userDashboard">
+                <span onClick={redirectToDashboard} style={{cursor: 'pointer'}}>Welcome, {userInfo.username}!</span>
+                <Link to="/logout" onClick={handleLogout}>Logout</Link>
+            </div>
+        ) : (
+            <div className="authLinks">
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
+            </div>
+        )}
+    </div>
+</header>
 
+    );
     
     
 }
