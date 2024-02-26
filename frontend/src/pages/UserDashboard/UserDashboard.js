@@ -17,7 +17,6 @@ function UserDashboard() {
                 if (response.ok) {
                     const data = await response.json();
                     setUserInfo(data);
-                    fetchUserBuilds(token);
                 } else {
                     console.error('Failed to fetch user info');
                 }
