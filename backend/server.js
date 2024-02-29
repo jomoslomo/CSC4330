@@ -11,6 +11,28 @@ const app = express();
 const PORT = 3001;
 let db; 
 
+//multer for file uploads
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); 
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); 
+    }
+});
+
+const upload = multer({ storage: storage });
+// Endpoint to handle file uploads
+app.post('/upload', upload.single('file'), (req, res) => {
+    // 'file' is the name of the field in your form that contains the file
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    res.status(200).json({ message: 'File uploaded successfully', filename: req.file.filename });
+});
+
 // Replace this URI with your actual connection string and ensure your credentials are secure
 const uri = "mongodb+srv://jomo:jomo@cluster0.wiikuok.mongodb.net/";
 const client = new MongoClient(uri, {
