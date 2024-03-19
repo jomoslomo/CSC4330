@@ -6,8 +6,8 @@ import axios from 'axios'; // Make sure to install axios via npm or yarn
 function BuildWizard() {
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedParts, setSelectedParts] = useState({
-        cpu: null,
         motherboard: null,
+        cpu: null,
         ram: null,
         storage: null,
         gpu: null,
@@ -16,7 +16,8 @@ function BuildWizard() {
         // accessories: []
     });
     const [buildName, setBuildName] = useState(''); // State to store the build name
-
+    const [showBuildNameWarning, setShowBuildNameWarning] = useState(false); // State to manage build name warning visibility
+x
     const renderBuildNameInput = () => (
         <div className="buildNameInput">
             <label htmlFor="buildName">Build Name:</label>
@@ -42,8 +43,8 @@ function BuildWizard() {
 
     // Define part selection steps in an array or object for easier management
     const steps = [
-        { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
         { type: 'motherboard', fetchUrl: 'http://localhost:3001/motherboards', component: SelectPart },
+        { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
         { type: 'ram', fetchUrl: 'http://localhost:3001/memory', component: SelectPart },
         { type: 'storage', fetchUrl: 'http://localhost:3001/storage', component: SelectPart },
         { type: 'gpu', fetchUrl: 'http://localhost:3001/gpus', component: SelectPart },
@@ -75,6 +76,7 @@ function BuildWizard() {
             </>
         );
     };
+
     const saveBuild = async () => {
         // The endpoint where builds are saved
         const saveEndpoint = 'http://localhost:3001/user/builds';
@@ -112,49 +114,29 @@ function BuildWizard() {
             alert('Failed to save build');
         }
     };
-    
 
-    const saveBduild = async () => {
-        // The endpoint where builds are saved
-        const saveEndpoint = 'http://localhost:3001/user/builds';
-        
-        // Retrieve the token saved during login from localStorage
-        const token = localStorage.getItem('token');
-        
-        try {
-            // Use the token in the Authorization header for your POST request
-            const response = await axios.post(saveEndpoint, {
-                build_name: buildName, // Use the state that holds the user's input for the build name
-                components: Object.values(selectedParts).map(part => part.id) // Assuming each part object has an 'id' property
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Use Bearer scheme for JWT
-                    'Content-Type': 'application/json' // Ensure the content type is set to application/json
-                }
-            });
-    
-            // Alert or handle the response from the server upon successful save
-            alert('Build saved successfully!');
-            // Optionally, redirect the user or clear the form as needed
-        } catch (error) {
-            // Log or handle errors, such as displaying a message to the user
-            console.error('Failed to save build', error);
-            alert('Failed to save build');
+    const handleNextStep = () => {
+        if (currentStep === 1 && !buildName) {
+            // Show warning if build name is not provided
+            setShowBuildNameWarning(true);
+        } else {
+            // Proceed to the next step
+            setCurrentStep(currentStep + 1);
+            // Hide the warning if previously shown
+            setShowBuildNameWarning(false);
         }
     };
-    
-    
-
 
     return (
         <div className="buildWizardContainer">
             <div className="buildWizard">
                 <h1>PC Build Wizard</h1>
                 {currentStep === 1 && renderBuildNameInput()} {/* Render the build name input at the first step */}
+                {showBuildNameWarning && <div className="warningMessage">Please input a build name to continue</div>}
                 {renderStep()}
                 <div className="navigationButtons">
                     {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>Previous</button>}
-                    {currentStep < steps.length && <button onClick={() => setCurrentStep(currentStep + 1)}>Next</button>}
+                    {currentStep < steps.length && <button onClick={handleNextStep} disabled={currentStep === 1 && !buildName}>Next</button>}
                     {currentStep === steps.length && (
                         <>
                             <button onClick={saveBuild}>Save Build</button>
@@ -167,6 +149,5 @@ function BuildWizard() {
         </div>
     );
 }
-
 
 export default BuildWizard;

@@ -24,3 +24,5 @@
 
 ## Project Aim
 "Building Dreams" aims to demystify the process of building a custom PC, making it accessible to both novices and experienced builders. By combining a comprehensive selection of components with detailed information and guidance, the application empowers users to create their ideal computer setup, tailored to their unique requirements and preferences.
+
+
