@@ -101,6 +101,27 @@ async function run() {
 
     db = client.db("csc4330"); // Assign db here
 
+
+    // Endpoint to get a list of users
+app.get('/users', verifyToken, async (req, res) => {
+    try {
+        // Fetch users from the database
+        const users = await db.collection('users').find({}, {
+            projection: { password: 0 } // Exclude the password field from the results
+        }).toArray();
+
+        if (users.length > 0) {
+            res.status(200).json(users);
+        } else {
+            res.status(404).json({ message: "No users found" });
+        }
+    } catch (error) {
+        console.error("Failed to retrieve users", error);
+        res.status(500).json({ message: "Failed to retrieve users" });
+    }
+});
+
+
     // Fetch all CPUs
 app.get('/cpus', async (req, res) => {
     const collection = db.collection('cpus');
@@ -203,9 +224,82 @@ app.get('/user/builds', verifyToken, async (req, res) => {
 });
 
 
+
+
+
+// Endpoint to get messages for the authenticated user
+app.get('/messages', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.userId; // Assuming the JWT includes userId
+        
+        // Optional: Get the other user's ID from query parameters if you want to fetch messages from a specific conversation
+        const otherUserId = req.query.otherUserId;
+        
+        let query = {
+            $or: [
+                { senderId: new ObjectId(userId), receiverId: new ObjectId(otherUserId) },
+                { senderId: new ObjectId(otherUserId), receiverId: new ObjectId(userId) }
+            ]
+        };
+
+        // If no specific otherUserId is provided, adjust the query to fetch all messages for the user
+        if (!otherUserId) {
+            query = {
+                $or: [
+                    { senderId: new ObjectId(userId) },
+                    { receiverId: new ObjectId(userId) }
+                ]
+            };
+        }
+
+        const messages = await db.collection('messages').find(query).sort({ createdAt: -1 }).toArray();
+        
+        res.json(messages);
+    } catch (error) {
+        console.error("Failed to retrieve messages", error);
+        res.status(500).json({ message: "Failed to retrieve messages" });
+    }
+});
+
+// Endpoint to post a new message
+app.post('/messages', verifyToken, async (req, res) => {
+    try {
+        const senderId = req.user.userId; // Extracted from the verified token
+        const { receiverId, content } = req.body;
+
+        // Basic validation
+        if (!receiverId || !content) {
+            return res.status(400).json({ message: "Missing receiver ID or content" });
+        }
+
+        const message = {
+            senderId: new ObjectId(senderId),
+            receiverId: new ObjectId(receiverId),
+            content: content,
+            createdAt: new Date(),
+            read: false
+        };
+
+        const result = await db.collection('messages').insertOne(message);
+
+        // Check if the message was successfully inserted
+        if (result.acknowledged) {
+            res.status(201).json({ message: 'Message sent successfully', messageId: result.insertedId });
+        } else {
+            res.status(500).json({ message: 'Failed to send message' });
+        }
+    } catch (error) {
+        console.error("Failed to send message", error);
+        res.status(500).json({ message: "Failed to send message" });
+    }
+});
+
+
 }
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     run().catch(console.dir);
 });
+
+

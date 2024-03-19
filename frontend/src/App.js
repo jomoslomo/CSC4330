@@ -7,6 +7,9 @@ import Header from './components/Header/Header'; // If you have a Header compone
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
 import UserDashboard from './pages/UserDashboard/UserDashboard';
+import MessagesPage from './pages/MessagesPage/MessagesPage'; // Import the MessagesPage component
+import ConversationsPage from './pages/MessagesPage/ConversationsPage'; // Import the ConversationsPage component
+// Inside your Router and Routes component:
 function App() {
   return (
     <Router>
@@ -17,6 +20,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/messages" element={<MessagesPage />} /> 
+        <Route path="/conversations/:userId" element={<ConversationsPage />} />
 
         {/* Add more routes as needed */}
       </Routes>

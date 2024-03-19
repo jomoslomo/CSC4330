@@ -72,6 +72,7 @@ function Header() {
             <div className="authLinks userDashboard">
                 <span onClick={redirectToDashboard} style={{cursor: 'pointer'}}>Welcome, {userInfo.username}!</span>
                 <Link to="/logout" onClick={handleLogout}>Logout</Link>
+                <Link to="/messages">Messages</Link>
             </div>
         ) : (
             <div className="authLinks">
