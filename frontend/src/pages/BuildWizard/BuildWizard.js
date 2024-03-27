@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SelectPart from '../../components/BuildWizardSteps/SelectPart';
 import './BuildWizard.css';
+import SearchBar from './SearchBar';
 import axios from 'axios'; // Make sure to install axios via npm or yarn
 
 function BuildWizard() {
@@ -13,9 +14,10 @@ function BuildWizard() {
         gpu: null,
         psu: null,
         case: null,
-        // accessories: []
+        accessories: []
     });
     const [buildName, setBuildName] = useState(''); // State to store the build name
+    let [searchTerm, setSearchTerm] = useState('');
 
     const renderBuildNameInput = () => (
         <div className="buildNameInput">
@@ -39,7 +41,6 @@ function BuildWizard() {
         </div>
       );
       
-
     // Define part selection steps in an array or object for easier management
     const steps = [
         { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
@@ -71,10 +72,12 @@ function BuildWizard() {
                     currentSelection={selectedParts[stepConfig.type]}
                     fetchUrl={stepConfig.fetchUrl}
                     partType={stepConfig.type.toUpperCase()}
+                    searchTerm={searchTerm}
                 />
             </>
         );
     };
+
     const saveBuild = async () => {
         // The endpoint where builds are saved
         const saveEndpoint = 'http://localhost:3001/user/builds';
@@ -151,6 +154,7 @@ function BuildWizard() {
             <div className="buildWizard">
                 <h1>PC Build Wizard</h1>
                 {currentStep === 1 && renderBuildNameInput()} {/* Render the build name input at the first step */}
+                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 {renderStep()}
                 <div className="navigationButtons">
                     {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>Previous</button>}

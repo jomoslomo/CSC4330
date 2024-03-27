@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './SelectPart.css'; // Ensure this is the correct path
 
-function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAttributes }) {
+function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAttributes, searchTerm }) {
     const [parts, setParts] = useState([]);
     const [displayedParts, setDisplayedParts] = useState([]);
     const [loadMore, setLoadMore] = useState(true);
+    let [search, setSearchTerm] = useState('');
+    let [searchedParts, setSearchedParts] = useState([]); 
     // Removed lastSelectedPart if it's not used or ensure it's utilized if needed
     // const [lastSelectedPart, setLastSelectedPart] = useState(null);
 
@@ -18,6 +20,26 @@ function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAtt
             })
             .catch(error => console.error(`Failed to load ${partType}`, error));
     }, [fetchUrl, currentSelection, partType]);
+
+    const handleSearch = () => {
+        // Apply search searching logic based on the searchTerm
+        if (parts) {
+            const searched = parts.filter(part => {
+            const partName = part.name.toLowerCase();
+            return partName.includes(searchTerm.toLowerCase());
+        });
+            setSearchedParts(searched.slice(0, 10));
+            setDisplayedParts(searchedParts);
+        } else {
+            // Handle the case when parts is null
+            setSearchedParts([]);
+        }
+        
+      };
+
+      useEffect(() => {
+        handleSearch(searchTerm); 
+    }, [search, handleSearch, parts]);
 
     const handleLoadMore = () => {
         const nextParts = parts.slice(displayedParts.length, displayedParts.length + 10);
