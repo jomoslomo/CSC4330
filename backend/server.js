@@ -150,6 +150,59 @@ app.get('/internal-hdds', async (req, res) => {
     res.json(internalHDDs);
 });
 
+// Assuming `db` is your MongoDB connection object
+
+// Endpoint to create a user build
+app.post('/user/builds', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { build_name, components } = req.body;
+
+        // Construct the build object
+        const build = {
+            build_name: build_name,
+            components: components
+        };
+
+        // Update the user document to add the build to the builds array
+        const result = await db.collection('users').updateOne(
+            { "_id": new ObjectId(userId) },
+            { $push: { builds: build } }
+        );
+
+        // Check if the update was successful
+        if (result.modifiedCount === 1) {
+            res.status(201).json({ message: 'User build created successfully' });
+        } else {
+            res.status(500).json({ message: 'Failed to create user build' });
+        }
+    } catch (error) {
+        console.error("Failed to create user build", error);
+        res.status(500).json({ message: "Failed to create user build" });
+    }
+});
+
+// Endpoint to get user builds
+app.get('/user/builds', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        // Retrieve the user document with builds
+        const user = await db.collection('users').findOne({ "_id": new ObjectId(userId) });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Extract and return the builds array
+        const builds = user.builds || [];
+        res.json(builds);
+    } catch (error) {
+        console.error("Failed to get user builds", error);
+        res.status(500).json({ message: "Failed to get user builds" });
+    }
+});
+
+
 }
 
 app.listen(PORT, () => {
