@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import SelectPart from '../../components/BuildWizardSteps/SelectPart';
 import './BuildWizard.css';
 import axios from 'axios'; // Make sure to install axios via npm or yarn
+import { useNavigate } from 'react-router-dom';
 
 function BuildWizard() {
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedParts, setSelectedParts] = useState({
         cpu: null,
@@ -13,7 +15,6 @@ function BuildWizard() {
         gpu: null,
         psu: null,
         case: null,
-        // accessories: []
     });
     const [buildName, setBuildName] = useState(''); // State to store the build name
 
@@ -38,9 +39,7 @@ function BuildWizard() {
           ))}
         </div>
       );
-      
 
-    // Define part selection steps in an array or object for easier management
     const steps = [
         { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
         { type: 'motherboard', fetchUrl: 'http://localhost:3001/motherboards', component: SelectPart },
@@ -49,7 +48,6 @@ function BuildWizard() {
         { type: 'gpu', fetchUrl: 'http://localhost:3001/gpus', component: SelectPart },
         { type: 'psu', fetchUrl: 'http://localhost:3001/psus', component: SelectPart },
         { type: 'case', fetchUrl: 'http://localhost:3001/cases', component: SelectPart },
-        // { type: 'accessories', fetchUrl: 'http://localhost:3001/accessories', component: SelectPart }
     ];
     
     const handleSelectPart = (part) => {
@@ -112,39 +110,6 @@ function BuildWizard() {
             alert('Failed to save build');
         }
     };
-    
-
-    const saveBduild = async () => {
-        // The endpoint where builds are saved
-        const saveEndpoint = 'http://localhost:3001/user/builds';
-        
-        // Retrieve the token saved during login from localStorage
-        const token = localStorage.getItem('token');
-        
-        try {
-            // Use the token in the Authorization header for your POST request
-            const response = await axios.post(saveEndpoint, {
-                build_name: buildName, // Use the state that holds the user's input for the build name
-                components: Object.values(selectedParts).map(part => part.id) // Assuming each part object has an 'id' property
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Use Bearer scheme for JWT
-                    'Content-Type': 'application/json' // Ensure the content type is set to application/json
-                }
-            });
-    
-            // Alert or handle the response from the server upon successful save
-            alert('Build saved successfully!');
-            // Optionally, redirect the user or clear the form as needed
-        } catch (error) {
-            // Log or handle errors, such as displaying a message to the user
-            console.error('Failed to save build', error);
-            alert('Failed to save build');
-        }
-    };
-    
-    
-
 
     return (
         <div className="buildWizardContainer">
@@ -158,7 +123,7 @@ function BuildWizard() {
                     {currentStep === steps.length && (
                         <>
                             <button onClick={saveBuild}>Save Build</button>
-                            <button>Finish</button>
+                            <button onClick={() => navigate('/CartPage', { state: { selectedParts } })}>Finish</button>
                         </>
                     )}
                 </div>
@@ -167,6 +132,5 @@ function BuildWizard() {
         </div>
     );
 }
-
 
 export default BuildWizard;

@@ -7,6 +7,7 @@ import Header from './components/Header/Header'; // If you have a Header compone
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
 import UserDashboard from './pages/UserDashboard/UserDashboard';
+import CartPage from './pages/CartPage/CartPage';
 function App() {
   return (
     <Router>
@@ -17,7 +18,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
-
+        <Route path="/CartPage" element={<CartPage />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>
