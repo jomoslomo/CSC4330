@@ -38,6 +38,10 @@ function LoginPage() {
         }
     };
 
+    const handlePasswordReset = () => {
+        navigate('/password-reset'); // Redirect to the password reset page
+    };
+
     return (
         <div className="loginPage">
             <form onSubmit={handleSubmit}>
@@ -61,6 +65,7 @@ function LoginPage() {
                     />
                 </div>
                 <button type="submit">Login</button>
+                <button type="button" onClick={handlePasswordReset}>Forgot Password?</button>
                 {message && <div className="message">{message}</div>} {/* Display messages to the user */}
             </form>
         </div>

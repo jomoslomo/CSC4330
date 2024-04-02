@@ -11,6 +11,7 @@ import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
 import UserDashboard from './pages/UserDashboard/UserDashboard';
 import MessagesPage from './pages/MessagesPage/MessagesPage'; // Import the MessagesPage component
 import ConversationsPage from './pages/MessagesPage/ConversationsPage'; // Import the ConversationsPage component
+import PasswordReset from './pages/PasswordReset/PasswordReset'; // Import the PasswordReset component
 // Inside your Router and Routes component:
 //import LogoutPage from './pages/LogoutPage/Logout'; 
 
@@ -39,6 +40,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/build" element={<BuildWizard />} />
         <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
+        <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
 

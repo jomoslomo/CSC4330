@@ -11,6 +11,12 @@ const app = express();
 const PORT = 3001;
 let db; 
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 //multer for file uploads
 const multer = require('multer');
 
@@ -153,28 +159,35 @@ async function run() {
         });
 
         // Express route for handling password reset requests
-        app.post('/reset-password', async (req, res) => {
-            const { token, newPassword } = req.body;
-
-            // Find the user by the token in the database
-            const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
-
-            if (!user) {
-                return res.status(400).json({ message: 'Invalid or expired token' });
+        app.post('/password-reset', async (req, res) => {
+            const { username, newPassword } = req.body;
+        
+            try {
+                // Find the user by the username in the database
+                const usersCollection = db.collection('users');
+                const user = await usersCollection.findOne({ username });
+        
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+        
+                // Hash the new password
+                const hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+                // Update the user's password
+                user.password = hashedPassword;
+                user.resetToken = undefined;
+                user.resetTokenExpiry = undefined;
+                await usersCollection.updateOne({ username }, { $set: user });
+        
+                res.json({ message: 'Password reset successful' });
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                res.status(500).json({ message: 'Failed to reset password. Please try again later.' });
             }
-
-            // Hash the new password
-            const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-            // Update the user's password
-            user.password = hashedPassword;
-            user.resetToken = undefined;
-            user.resetTokenExpiry = undefined;
-            await user.save();
-            
-
-            res.json({ message: 'Password reset successful' });
         });
+
+
     } catch (error) {
         console.error("Could not connect to MongoDB", error);
     }
@@ -374,6 +387,29 @@ app.post('/messages', verifyToken, async (req, res) => {
     }
 });
 
+app.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+
+    // Generate a reset token
+    const resetToken = generateResetToken(email);
+
+    // Construct the password reset URL with the token
+    const resetURL = `http://yourwebsite.com/reset-password?token=${resetToken}`;
+
+    // Send the password reset email
+    try {
+        await transporter.sendMail({
+            from: 'dreamsbuilding508@gmail.com',
+            to: email,
+            subject: 'Password Reset Request',
+            html: `Click <a href="${resetURL}">here</a> to reset your password.`
+        });
+        res.status(200).json({ message: 'Password reset email sent successfully' });
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+        res.status(500).json({ error: 'Failed to send password reset email' });
+    }
+});
 
 }
 
