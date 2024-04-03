@@ -1,5 +1,111 @@
 /* pages/Home/Home.css */
-.home {
+/* .home {
     text-align: center;
     padding: 20px;
+} */
+
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
+
+.left-column,
+.middle-column,
+.right-column {
+    flex: 1;
+}
+
+.left-column {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.middle-column {
+    max-width: 600px; 
+    margin-left: 75px;
+    margin-right: 75px;
+
+    text-align: center;
+    /* word-spacing: 10px; */
+
+}
+
+.right-column {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    
+}
+
+.small-image {
+    width: 300px; 
+    margin-right: 80px;
+    margin-top: 10px;
+}
+
+.small-image2{
+    width: 300px;
+    margin-right: 80px;
+    
+}
+
+.small-button {
+    font-size: 20px; 
+    padding: 14px 14px;
+    width: 300px;
+    margin-right: 20px; 
+    margin-left: 60px;
+    margin-top: 20px;
+}
+
+
+.cpu-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+}
+
+.motherboard-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+
+}
+
+.RAM-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+
+}
+
+.Storage-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+
+}
+
+.CPU-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+
+}
+
+.Case-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+
+}
+
+.PSU-image {
+    width: 150px;
+    margin-left: 150px;
+    padding-top: 20px;
+
+}
+
