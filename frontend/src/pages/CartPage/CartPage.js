@@ -7,37 +7,42 @@ function CartPage() {
     const [imageSrc, setImageSrc] = useState(null);
 
     const handleFindOnAmazon = (partName) => {
-        // Construct Amazon search URL
         const amazonSearchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(partName)}`;
-
-        // Open Amazon search URL in a new tab
         window.open(amazonSearchUrl, '_blank');
     };
 
     const handleSeeImage = (partName) => {
-        // Construct Google search URL for the part
         const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(partName)}`;
-        
-        // Open Google search URL in a new tab
         window.open(googleSearchUrl, '_blank');
     };
 
     const handleUnseeImage = () => {
-        // Remove the displayed image
         setImageSrc(null);
     };
 
     const handleDeleteItem = (partType) => {
-        // Remove the entire item (category) from the selectedParts list
         const updatedParts = { ...selectedParts };
         delete updatedParts[partType];
         setSelectedParts(updatedParts);
     };
 
+    // Function to calculate total price
+    const calculateTotalPrice = () => {
+        let totalPrice = 0;
+        Object.values(selectedParts).forEach(part => {
+            if (Array.isArray(part)) {
+                part.forEach(p => totalPrice += p.price);
+            } else {
+                totalPrice += part.price;
+            }
+        });
+        return totalPrice.toFixed(2); // Fix to two decimal places
+    };
+
     return (
         <div>
-            <h1>Cart</h1>
-            <h2>Selected Parts</h2>
+            <h1 style={{ marginLeft: '20px' }}>Cart</h1>
+            <h2 style={{ marginLeft: '40px' }}>Selected Parts</h2>
             <ul>
                 {Object.entries(selectedParts).map(([partType, part]) => (
                     <li key={partType} style={{ display: 'flex', alignItems: 'center' }}>
@@ -46,13 +51,13 @@ function CartPage() {
                             <ul>
                                 {part.map(p => (
                                     <li key={p.name} style={{ marginLeft: '10px' }}>
-                                        {p.name}
+                                        {p.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {p.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </li>
                                 ))}
                             </ul>
                         ) : (
                             <div style={{ marginLeft: '10px' }}>
-                                {part.name}
+                                {part.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {part.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
                         )}
                         <button
@@ -76,7 +81,10 @@ function CartPage() {
                     </li>
                 ))}
             </ul>
-            {/* Display the image if it exists */}
+            <div style={{ width: '50%', textAlign: 'left' }}>
+                <hr />
+            </div>
+            <p style={{ marginLeft: '40px', marginTop: '20px', fontWeight: 'bold' }}>Total Price: <span style={{ marginLeft: '250px' }}>${calculateTotalPrice()}</span></p>
             {imageSrc && (
                 <div>
                     <img src={imageSrc} alt="Part" style={{ marginTop: '20px', maxWidth: '100%', maxHeight: '300px' }} />
