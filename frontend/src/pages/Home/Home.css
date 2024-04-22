@@ -34,15 +34,20 @@
 
 .right-column {
     display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: right;
+    /* padding-left: 75px; */
     
 }
+
 
 .small-image {
     width: 300px; 
     margin-right: 80px;
     margin-top: 10px;
+    padding-left: 100px;
 }
 
 .small-image2{
@@ -63,49 +68,82 @@
 
 .cpu-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 10px;
+    padding-top: 35px;
 }
 
 .motherboard-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 10px;
+    padding-top: 35px;
 
 }
 
 .RAM-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 10px;
+    padding-top: 35px;
 
 }
 
 .Storage-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 10px;
+    padding-top: 35px;
 
 }
 
 .CPU-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 15px;
+    padding-top: 35px;
 
 }
 
 .Case-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 10px;
+    padding-top: 35px;
 
 }
 
 .PSU-image {
     width: 150px;
-    margin-left: 150px;
-    padding-top: 20px;
+    margin-left: 10px;
+    padding-top: 35px;
 
 }
 
+.small-button {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid purple; /* Purple border */
+    border-radius: 4px;
+    color: black; /* Change the text color */
+  }
+  
+  .small-button:hover {
+    background-color: purple; /* Change background color on hover */
+    color: white; /* Change text color on hover */
+  }
+
+  .small-image,
+  .small-image2 {
+      display: block; /* Change display property to block to stack them vertically */
+      margin-bottom: 10px; /* Add margin bottom to create space between images */
+  }
+
+  .cpu-image,
+.motherboard-image,
+.RAM-image,
+.Storage-image,
+.CPU-image,
+.Case-image,
+.PSU-image {
+    display: block; /* Change display property to block to stack them vertically */
+    margin-bottom: 10px;
+    margin-left: 150px; /* Add margin bottom to create space between images */
+}

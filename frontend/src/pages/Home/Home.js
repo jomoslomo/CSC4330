@@ -1,12 +1,17 @@
 import React from 'react';
-import './Home.css'; // Assuming you have some CSS in Home.css
+import './Home.css';
+import { Link } from 'react-router-dom'; // Assuming you have some CSS in Home.css
 
 function Home() {
     return (
         <div className="home">
             <div className="left-column">
                 <div className="button-container">
-                    <button className="small-button" onClick={() => { /* Handle navigation to build guides */ }}>Build Guides</button>
+                    {/* <button className="small-button" onClick={() => {BuildGuides.js}}>Build Guides</button> */}
+
+                     {/* Use Link to navigate to the BuildGuides page */}
+                     <Link to="/buildguides" className="small-button">Build Guides</Link>
+                    
                     <img className="cpu-image" src="https://t3.ftcdn.net/jpg/00/81/24/72/360_F_81247213_OYvGTCn5mnQQ2c0gWJ1U5ixcbmNBaMOp.jpg" alt="CPU Image"/>
                     <img className="motherboard-image" src="https://www.totalphase.com/media/blog/2022/06/pexels-andrey-matveev-5766819-1024x683.jpg" alt="Motherboard Image"/>
                     <img className="RAM-image" src="https://www.pcbuildadvisor.com/wp-content/uploads/2015/09/RAM-for-a-PC.jpg" alt="RAM Image"/>
@@ -19,9 +24,9 @@ function Home() {
                 </div>
             </div>
             <div className="middle-column">
-                <h1>Welcome to Building Dreams</h1>
+                <h1>Welcome to Dreamworks</h1>
                 <p>Start building your dream PC today!</p>
-                <p>"Building Dreams" aims to demystify the process of building a custom PC, making it
+                <p>"Dreamworks" aims to demystify the process of building a custom PC, making it
                 accessible to both novices and experienced builders. By combining a comprehensive
                 selection of components with detailed information and guidance, the application
                 empowers users to create their ideal computer setup, tailored to their unique requirements
@@ -53,7 +58,10 @@ function Home() {
             </div>
             <div className="right-column">
                 <img className="small-image" src="https://www.cyberpowerpc.com/images/cs/prism321v/cs-450-179_400.png" alt="small image" />
-                {/* <img className="small-image2" src="https://cdn.originpc.com/img/compare-all/gaming-desktops/genesis-7000-series-system-image.png" alt="small image 2" /> */}
+                <img className="small-image" src="https://static.cybertron.com/clx/components/cas-lia-pco11do/gallery/1.png" alt="small image2"/>
+                <img className="small-image" src="https://c1.neweggimages.com/NeweggImage/productimage/83-289-215-V01.jpg" alt="small image3"/>
+                <img className="small-image" src="https://m.media-amazon.com/images/I/91LSF1iZUFL.jpg" alt="small image4"/>
+
             </div>
         </div>
     );
