@@ -17,7 +17,7 @@ function BuildWizard() {
     });
     const [buildName, setBuildName] = useState(''); // State to store the build name
     const [showBuildNameWarning, setShowBuildNameWarning] = useState(false); // State to manage build name warning visibility
-x
+
     const renderBuildNameInput = () => (
         <div className="buildNameInput">
             <label htmlFor="buildName">Build Name:</label>

@@ -261,15 +261,27 @@ app.get('/messages', verifyToken, async (req, res) => {
     }
 });
 
+const { ObjectId } = require('mongodb');
+
+// Helper function to check if a string is a valid ObjectId
+function isValidObjectId(id) {
+    return ObjectId.isValid(id) && new ObjectId(id).toString() === id;
+}
+
 // Endpoint to post a new message
 app.post('/messages', verifyToken, async (req, res) => {
     try {
         const senderId = req.user.userId; // Extracted from the verified token
-        const { receiverId, content } = req.body;
+        const { receiverId, content, buildId } = req.body;
 
-        // Basic validation
+        // Basic validation for receiverId and content
         if (!receiverId || !content) {
             return res.status(400).json({ message: "Missing receiver ID or content" });
+        }
+
+        // Validation for senderId and receiverId to be valid ObjectIds
+        if (!isValidObjectId(senderId) || !isValidObjectId(receiverId)) {
+            return res.status(400).json({ message: "Invalid sender or receiver ID" });
         }
 
         const message = {
@@ -279,6 +291,13 @@ app.post('/messages', verifyToken, async (req, res) => {
             createdAt: new Date(),
             read: false
         };
+
+        // Check if a buildId is provided and it is a valid ObjectId
+        if (buildId && isValidObjectId(buildId)) {
+            message.buildId = new ObjectId(buildId);
+        } else if (buildId) { // If buildId is provided but invalid, return an error
+            return res.status(400).json({ message: "Invalid build ID" });
+        }
 
         const result = await db.collection('messages').insertOne(message);
 
@@ -294,6 +313,275 @@ app.post('/messages', verifyToken, async (req, res) => {
     }
 });
 
+app.post('/user/builds/share', verifyToken, async (req, res) => {
+    const { buildId, recipientUsername } = req.body;
+    const senderId = req.user.userId;
+
+    try {
+        // Check if the build exists and belongs to the sender
+        const build = await db.collection('users').findOne({ _id: new ObjectId(senderId), "builds._id": new ObjectId(buildId) });
+        if (!build) {
+            return res.status(404).json({ message: "Build not found or does not belong to you" });
+        }
+
+        // Find the recipient by username
+        const recipient = await db.collection('users').findOne({ username: recipientUsername });
+        if (!recipient) {
+            return res.status(404).json({ message: "Recipient user not found" });
+        }
+
+        // Check if the build is already shared with the recipient
+        const isAlreadyShared = await db.collection('sharedBuilds').findOne({
+            buildId: new ObjectId(buildId),
+            recipientId: recipient._id
+        });
+
+        if (isAlreadyShared) {
+            return res.status(409).json({ message: "Build already shared with this user" });
+        }
+
+        // Share the build
+        await db.collection('sharedBuilds').insertOne({
+            buildId: new ObjectId(buildId),
+            ownerId: new ObjectId(senderId),
+            recipientId: recipient._id,
+            sharedAt: new Date()
+        });
+
+        res.status(201).json({ message: "Build shared successfully" });
+    } catch (error) {
+        console.error("Error sharing the build", error);
+        res.status(500).json({ message: "Failed to share the build" });
+    }
+});
+
+app.get('/user/builds/shared', verifyToken, async (req, res) => {
+    const recipientId = req.user.userId;
+
+    try {
+        const sharedBuilds = await db.collection('sharedBuilds').find({ recipientId: new ObjectId(recipientId) }).toArray();
+        if (!sharedBuilds.length) {
+            return res.status(404).json({ message: "No builds shared with you" });
+        }
+
+        // Retrieve detailed information about each shared build
+        const builds = await Promise.all(sharedBuilds.map(async (entry) => {
+            const buildDetails = await db.collection('users').findOne(
+                { "_id": entry.ownerId, "builds._id": entry.buildId },
+                { projection: { "builds.$": 1 } }
+            );
+            return buildDetails.builds[0];
+        }));
+
+        res.json(builds);
+    } catch (error) {
+        console.error("Failed to retrieve shared builds", error);
+        res.status(500).json({ message: "Failed to retrieve shared builds" });
+    }
+});
+
+
+
+// Search for users by username
+app.get('/search-users', async (req, res) => {
+    const { username } = req.query;
+
+    if (!username) {
+        return res.status(400).json({ message: "Username query is required." });
+    }
+
+    try {
+        const user = await db.collection('users').findOne({ username: username });
+        if (user) {
+            // For privacy, don't send back the password, even if it's hashed
+            const { password, ...userWithoutPassword } = user;
+            res.json(userWithoutPassword);
+        } else {
+            res.status(404).json({ message: "User not found." });
+        }
+    } catch (error) {
+        console.error("Error searching for user:", error);
+        res.status(500).json({ message: "Internal server error." });
+    }
+});
+
+
+app.post('/friends/requests', verifyToken, async (req, res) => {
+    try {
+        const senderId = req.user.userId; // Extracted from the verified token
+        const { username } = req.body; // Now expecting a username
+        
+        if (!username) {
+            return res.status(400).json({ message: "Username is required" });
+        }
+        
+        // Find the recipient user by username
+        const recipient = await db.collection('users').findOne({ username: username });
+        if (!recipient) {
+            return res.status(404).json({ message: 'Recipient user not found' });
+        }
+        const recipientId = recipient._id.toString();
+        
+        // Prevent users from sending requests to themselves
+        if (senderId === recipientId) {
+            return res.status(400).json({ message: "You cannot send a friend request to yourself" });
+        }
+
+        // Check if there's already an existing request between these two users
+        const existingRequest = await db.collection('friendships').findOne({
+            $or: [
+                { user1: new ObjectId(senderId), user2: new ObjectId(recipientId) },
+                { user1: new ObjectId(recipientId), user2: new ObjectId(senderId) }
+            ]
+        });
+
+        if (existingRequest) {
+            // You can refine this by checking the status and customizing the message accordingly
+            return res.status(400).json({ message: 'A friend request already exists between you two' });
+        }
+
+        // Create a new friend request
+        const friendRequest = {
+            user1: new ObjectId(senderId),
+            user2: new ObjectId(recipientId),
+            status: 'pending',
+            createdAt: new Date(),
+        };
+
+        const result = await db.collection('friendships').insertOne(friendRequest);
+
+        if (result.acknowledged) {
+            res.status(201).json({ message: 'Friend request sent successfully' });
+        } else {
+            res.status(500).json({ message: 'Failed to send friend request' });
+        }
+    } catch (error) {
+        console.error('Failed to send friend request', error);
+        res.status(500).json({ message: 'Failed to send friend request' });
+    }
+});
+
+
+app.post('/friends/update', verifyToken, async (req, res) => {
+    const { requestId, action } = req.body; // action can be 'accept' or 'decline'
+    
+    if (!requestId || !action) {
+        return res.status(400).json({ message: "Request ID and action are required." });
+    }
+    
+    const validActions = ['accept', 'decline'];
+    if (!validActions.includes(action)) {
+        return res.status(400).json({ message: "Invalid action. Must be 'accept' or 'decline'." });
+    }
+    
+    const newStatus = action === 'accept' ? 'accepted' : 'declined';
+    
+    try {
+        // Retrieve the friend request to check if the current user is the recipient
+        const request = await db.collection('friendships').findOne({ _id: new ObjectId(requestId) });
+        
+        if (!request) {
+            return res.status(404).json({ message: "Friend request not found." });
+        }
+        
+        // Ensure the current user is the recipient of the friend request
+        if (request.user2.toString() !== req.user.userId) {
+            return res.status(403).json({ message: "Only the recipient of the friend request can accept or decline it." });
+        }
+
+        // Attempt to update the friend request
+        const result = await db.collection('friendships').updateOne(
+            { 
+                _id: new ObjectId(requestId),
+                status: 'pending' // Ensures we only update requests that are still pending
+            },
+            { 
+                $set: { status: newStatus } 
+            }
+        );
+        
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ message: "Friend request not found or not in a pending state." });
+        }
+        
+        res.json({ message: `Friend request ${newStatus} successfully.` });
+    } catch (error) {
+        console.error(`Failed to ${action} friend request`, error);
+        res.status(500).json({ message: `Failed to ${action} friend request.` });
+    }
+});
+
+app.get('/friends/requests', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.userId; // Extracted from the verified token
+
+        // Fetch all friend requests involving the current user
+        let friendRequests = await db.collection('friendships').find({
+            $or: [{ user1: new ObjectId(userId) }, { user2: new ObjectId(userId) }],
+            status: 'pending'
+        }).toArray();
+
+        // Enrich each friend request with details about the other user
+        friendRequests = await Promise.all(friendRequests.map(async (request) => {
+            // Determine if the request is outgoing or incoming
+            const isOutgoing = request.user1.toString() === userId;
+            // Find the ID of the other user involved in the request
+            const otherUserId = isOutgoing ? request.user2 : request.user1;
+            // Fetch the other user's details
+            const otherUser = await db.collection('users').findOne({ _id: new ObjectId(otherUserId) });
+            // Return the enriched friend request
+            return {
+                ...request,
+                isOutgoing,
+                otherUserId: otherUserId.toString(), // Include the other user's ID for reference
+                otherUsername: otherUser.username, // Include the other user's username for the frontend
+            };
+        }));
+
+        res.json(friendRequests);
+    } catch (error) {
+        console.error('Failed to retrieve friend requests', error);
+        res.status(500).json({ message: 'Failed to retrieve friend requests' });
+    }
+});
+
+
+
+
+// Endpoint to get a user's friend list
+app.get('/friends/list', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.userId; // Extracted from the verified token
+
+        // Find all accepted friend requests where the user is either the sender or recipient
+        const friends = await db.collection('friendships').find({
+            $and: [
+                { $or: [{ user1: new ObjectId(userId) }, { user2: new ObjectId(userId) }] },
+                { status: 'accepted' }
+            ]
+        }).toArray();
+
+        // Prepare an array to store friend user IDs
+        let friendIds = [];
+
+        // Iterate through the friends array and add friend user IDs to the friendIds array
+        friends.forEach(friendship => {
+            if (friendship.user1.toString() === userId) {
+                friendIds.push(friendship.user2);
+            } else {
+                friendIds.push(friendship.user1);
+            }
+        });
+
+        // Find user details for the friend user IDs
+        const friendDetails = await db.collection('users').find({ _id: { $in: friendIds } }).toArray();
+
+        res.json(friendDetails);
+    } catch (error) {
+        console.error('Failed to retrieve friend list', error);
+        res.status(500).json({ message: 'Failed to retrieve friend list' });
+    }
+});
 
 }
 
