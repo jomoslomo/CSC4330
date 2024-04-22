@@ -15,7 +15,6 @@ function BuildWizard() {
         gpu: [],
         psu: [],
         case: [],
-        accessories: []
     });
     const [buildName, setBuildName] = useState(''); // State to store the build name
     let [searchTerm, setSearchTerm] = useState('');
