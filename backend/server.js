@@ -1,8 +1,11 @@
+//handles api
 const express = require('express');
 const bodyParser = require('body-parser');
+//allows us to use express()??
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+//handles database
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
@@ -15,6 +18,7 @@ const client = new MongoClient(uri, {
     serverApi: ServerApiVersion.v1
 });
 
+//stops cross-origin errors
 app.use(cors());
 app.use(bodyParser.json());
 

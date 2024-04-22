@@ -137,3 +137,30 @@
 .search input[type="text"]:hover {
     border-color: #007bff; /* Highlight color when hovered */
 }
+
+
+.selectedPart {
+    display: flex;
+    flex-direction: column; /* Arrange children vertically */
+    background-color: #fff; /* White background for each part */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px; /* Rounded corners for each part */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for each part */
+    transition: transform 0.2s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.selectedPart button {
+    background-color: #dc3545; /* Red */
+    color: white;
+    padding: 5px 10px; /* Adjust padding for smaller button */
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-end; /* Align button to the end of the container */
+}
+
+.selectedPart button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}

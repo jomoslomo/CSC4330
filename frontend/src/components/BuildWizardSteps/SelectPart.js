@@ -4,9 +4,7 @@ import './SelectPart.css'; // Ensure this is the correct path
 function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAttributes, searchTerm }) {
     const [parts, setParts] = useState([]);
     const [displayedParts, setDisplayedParts] = useState([]);
-    const [loadMore, setLoadMore] = useState(true);
-    let [search, setSearchTerm] = useState('');
-    let [searchedParts, setSearchedParts] = useState([]); 
+    const [loadMore, setLoadMore] = useState(true); 
     // Removed lastSelectedPart if it's not used or ensure it's utilized if needed
     // const [lastSelectedPart, setLastSelectedPart] = useState(null);
 
@@ -22,24 +20,21 @@ function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAtt
     }, [fetchUrl, currentSelection, partType]);
 
     const handleSearch = () => {
-        // Apply search searching logic based on the searchTerm
+        let searched;
         if (parts) {
-            const searched = parts.filter(part => {
-            const partName = part.name.toLowerCase();
-            return partName.includes(searchTerm.toLowerCase());
-        });
-            setSearchedParts(searched.slice(0, 10));
-            setDisplayedParts(searchedParts);
+            searched = parts.filter(part => {
+                const partName = part.name.toLowerCase();
+                return partName.includes(searchTerm.toLowerCase());
+            });
         } else {
-            // Handle the case when parts is null
-            setSearchedParts([]);
+            searched = [];
         }
-        
+        setDisplayedParts(searched.slice(0, 10));
       };
 
       useEffect(() => {
-        handleSearch(searchTerm); 
-    }, [search, handleSearch, parts]);
+        handleSearch(searchTerm);
+    }, [searchTerm, parts]);
 
     const handleLoadMore = () => {
         const nextParts = parts.slice(displayedParts.length, displayedParts.length + 10);
@@ -53,13 +48,27 @@ function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAtt
         onSelect(part); // Call the onSelect prop function with the selected part
     };
 
+    const getAttributes = (part) => {
+        if(part) {
+            const attributes = [];
+            Object.keys(part).forEach(key => {
+                if (key !== '_id' && key !== 'name') {
+                    attributes.push(`${key}: ${part[key]}`);
+                }
+            });
+
+            return attributes;
+        }
+        else return null;
+    }
+
     return (
         <div className="partContainer">
-            {displayedParts.map(part => (
+            {displayedParts.map(part => ( 
                 <div key={part._id} className="partCard" onClick={() => handleSelect(part)}>
                     <h3>{part.name}</h3>
-                    {displayAttributes && displayAttributes.map(attr => (
-                        <p key={attr}>{`${attr.charAt(0).toUpperCase() + attr.slice(1)}: ${part[attr]}`}</p>
+                    {getAttributes(part) && getAttributes(part).map(attribute => (
+                    <p key={attribute}>{attribute}</p>
                     ))}
                 </div>
             ))}
