@@ -25,10 +25,12 @@ function LoginPage() {
                 console.log('Login successful', data);
                 setMessage('Login successful');
                 localStorage.setItem('token', data.token); // Save the token
-                // Dispatch custom login event
+                localStorage.setItem('userId', data.userId); // Assuming 'userId' is part of the response
+                localStorage.setItem('username', username); // Save the username for later use
                 window.dispatchEvent(new CustomEvent('login', { detail: data }));
                 navigate('/dashboard'); // Redirect to the dashboard
-            } else {
+            }
+            else {
                 console.log('Login failed', data.message);
                 setMessage(data.message || 'An error occurred during login');
             }
@@ -73,3 +75,6 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+
+

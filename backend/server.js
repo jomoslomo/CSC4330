@@ -215,6 +215,27 @@ app.get('/users', verifyToken, async (req, res) => {
 });
 
 
+
+    // Endpoint to get a list of users
+app.get('/users', verifyToken, async (req, res) => {
+    try {
+        // Fetch users from the database
+        const users = await db.collection('users').find({}, {
+            projection: { password: 0 } // Exclude the password field from the results
+        }).toArray();
+
+        if (users.length > 0) {
+            res.status(200).json(users);
+        } else {
+            res.status(404).json({ message: "No users found" });
+        }
+    } catch (error) {
+        console.error("Failed to retrieve users", error);
+        res.status(500).json({ message: "Failed to retrieve users" });
+    }
+});
+
+
     // Fetch all CPUs
 app.get('/cpus', async (req, res) => {
     const collection = db.collection('cpus');

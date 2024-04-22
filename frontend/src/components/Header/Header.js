@@ -73,6 +73,8 @@ function Header() {
                 <span onClick={redirectToDashboard} style={{cursor: 'pointer'}}>Welcome, {userInfo.username}!</span>
                 <Link to="/logout" onClick={handleLogout}>Logout</Link>
                 <Link to="/messages">Messages</Link>
+                <Link to="/friends">Friends</Link>
+
             </div>
         ) : (
             <div className="authLinks">
@@ -84,6 +86,8 @@ function Header() {
 </header>
 
     );
+    
+    
 }
 
 export default Header;

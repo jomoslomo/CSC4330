@@ -1,0 +1,83 @@
+.shareBuildsPageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .buildSelection, .friendSelection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .buildLabel, .friendLabel {
+    margin: 10px;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  }
+  
+  .buildLabel:hover, .friendLabel:hover {
+    background-color: #e7f5ff;
+    border-color: #007bff;
+  }
+  
+  /* Adjust this selector to change the label’s styling when the input is checked */
+  .buildLabel input[type="radio"]:checked + span, .friendLabel input[type="radio"]:checked + span {
+    background-color: #007bff;
+    color: #ffffff;
+    border-color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.4);
+  }
+  
+  /* Apply styles to the entire label when the radio is checked */
+  .buildLabel input[type="radio"]:checked, .friendLabel input[type="radio"]:checked {
+    background-color: #007bff; /* This won't work as expected because input is hidden and small, adjust surrounding label instead */
+  }
+  
+  .buildLabel input[type="radio"]:checked + label, .friendLabel input[type="radio"]:checked + label {
+    background-color: #007bff; /* Ensures the whole label changes */
+    border-color: #0056b3;
+  }
+  
+  .buildLabel span, .friendLabel span {
+    pointer-events: none;  /* Prevents losing focus on the label when clicking on the span */
+  }
+  
+  .feedback {
+    color: #d9534f;
+    margin: 20px 0;
+    font-size: 16px;
+  }
+  
+  form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  

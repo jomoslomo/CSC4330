@@ -1,5 +1,149 @@
 /* pages/Home/Home.css */
-.home {
+/* .home {
     text-align: center;
     padding: 20px;
+} */
+
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.left-column,
+.middle-column,
+.right-column {
+    flex: 1;
+}
+
+.left-column {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.middle-column {
+    max-width: 600px; 
+    margin-left: 75px;
+    margin-right: 75px;
+
+    text-align: center;
+    /* word-spacing: 10px; */
+
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: right;
+    /* padding-left: 75px; */
+    
+}
+
+
+.small-image {
+    width: 300px; 
+    margin-right: 80px;
+    margin-top: 10px;
+    padding-left: 100px;
+}
+
+.small-image2{
+    width: 300px;
+    margin-right: 80px;
+    
+}
+
+.small-button {
+    font-size: 20px; 
+    padding: 14px 14px;
+    width: 300px;
+    margin-right: 20px; 
+    margin-left: 60px;
+    margin-top: 20px;
+}
+
+
+.cpu-image {
+    width: 150px;
+    margin-left: 10px;
+    padding-top: 35px;
+}
+
+.motherboard-image {
+    width: 150px;
+    margin-left: 10px;
+    padding-top: 35px;
+
+}
+
+.RAM-image {
+    width: 150px;
+    margin-left: 10px;
+    padding-top: 35px;
+
+}
+
+.Storage-image {
+    width: 150px;
+    margin-left: 10px;
+    padding-top: 35px;
+
+}
+
+.CPU-image {
+    width: 150px;
+    margin-left: 15px;
+    padding-top: 35px;
+
+}
+
+.Case-image {
+    width: 150px;
+    margin-left: 10px;
+    padding-top: 35px;
+
+}
+
+.PSU-image {
+    width: 150px;
+    margin-left: 10px;
+    padding-top: 35px;
+
+}
+
+.small-button {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid purple; /* Purple border */
+    border-radius: 4px;
+    color: black; /* Change the text color */
+  }
+  
+  .small-button:hover {
+    background-color: purple; /* Change background color on hover */
+    color: white; /* Change text color on hover */
+  }
+
+  .small-image,
+  .small-image2 {
+      display: block; /* Change display property to block to stack them vertically */
+      margin-bottom: 10px; /* Add margin bottom to create space between images */
+  }
+
+  .cpu-image,
+.motherboard-image,
+.RAM-image,
+.Storage-image,
+.CPU-image,
+.Case-image,
+.PSU-image {
+    display: block; /* Change display property to block to stack them vertically */
+    margin-bottom: 10px;
+    margin-left: 150px; /* Add margin bottom to create space between images */
 }

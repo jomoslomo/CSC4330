@@ -10,28 +10,9 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegistrationPage from './pages/RegistrationPage/RegistrationPage';
 import UserDashboard from './pages/UserDashboard/UserDashboard';
 import MessagesPage from './pages/MessagesPage/MessagesPage'; // Import the MessagesPage component
-import ConversationsPage from './pages/MessagesPage/ConversationsPage'; // Import the ConversationsPage component
-import PasswordReset from './pages/PasswordReset/PasswordReset'; // Import the PasswordReset component
+import FriendsPage from './pages/FriendsPage/FriendsPage';
+import ShareBuilds from './pages/ShareBuildsPage/ShareBuildsPage';
 // Inside your Router and Routes component:
-//import LogoutPage from './pages/LogoutPage/Logout'; 
-
-const AuthWrapper = () => {
-  const location = useLocation(); // current location
-
-  const userLogged = JSON.parse(localStorage.getItem("userLogged"));
-
-  return userLogged
-    ? <Outlet />
-    : (
-      <Navigate
-        to="/"
-        replace
-        state={{ from: location }} // <-- pass location in route state
-      />
-    );
-};
-
-
 function App() {
   return (
     <Router>
@@ -43,7 +24,9 @@ function App() {
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
-
+        <Route path="/messages" element={<MessagesPage />} /> 
+        <Route path="/friends" element={<FriendsPage />} /> 
+        <Route path='/share' element={<ShareBuilds />} /> 
         {/* Add more routes as needed */}
       </Routes>
     </Router>
