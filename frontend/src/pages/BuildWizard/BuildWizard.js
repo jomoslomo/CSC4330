@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import SelectPart from '../../components/BuildWizardSteps/SelectPart';
 import './BuildWizard.css';
 import axios from 'axios'; // Make sure to install axios via npm or yarn
+import { useNavigate } from 'react-router-dom';
 
 function BuildWizard() {
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedParts, setSelectedParts] = useState({
         motherboard: null,
@@ -13,7 +15,6 @@ function BuildWizard() {
         gpu: null,
         psu: null,
         case: null,
-        // accessories: []
     });
     const [buildName, setBuildName] = useState(''); // State to store the build name
     const [showBuildNameWarning, setShowBuildNameWarning] = useState(false); // State to manage build name warning visibility
@@ -39,9 +40,7 @@ function BuildWizard() {
           ))}
         </div>
       );
-      
 
-    // Define part selection steps in an array or object for easier management
     const steps = [
         { type: 'motherboard', fetchUrl: 'http://localhost:3001/motherboards', component: SelectPart },
         { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
@@ -50,7 +49,6 @@ function BuildWizard() {
         { type: 'gpu', fetchUrl: 'http://localhost:3001/gpus', component: SelectPart },
         { type: 'psu', fetchUrl: 'http://localhost:3001/psus', component: SelectPart },
         { type: 'case', fetchUrl: 'http://localhost:3001/cases', component: SelectPart },
-        // { type: 'accessories', fetchUrl: 'http://localhost:3001/accessories', component: SelectPart }
     ];
     
     const handleSelectPart = (part) => {
@@ -140,7 +138,7 @@ function BuildWizard() {
                     {currentStep === steps.length && (
                         <>
                             <button onClick={saveBuild}>Save Build</button>
-                            <button>Finish</button>
+                            <button onClick={() => navigate('/CartPage', { state: { selectedParts } })}>Finish</button>
                         </>
                     )}
                 </div>
@@ -151,3 +149,4 @@ function BuildWizard() {
 }
 
 export default BuildWizard;
+

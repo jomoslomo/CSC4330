@@ -1,0 +1,23 @@
+/* CartPage.css */
+.cart-page {
+    text-align: center;
+    padding: 20px;
+}
+
+.cart-page ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.cart-page li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Add spacing between list items */
+}
+
+.cart-page li img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-left: 10px;
+}

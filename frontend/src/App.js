@@ -13,6 +13,7 @@ import MessagesPage from './pages/MessagesPage/MessagesPage'; // Import the Mess
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import ShareBuilds from './pages/ShareBuildsPage/ShareBuildsPage';
 // Inside your Router and Routes component:
+import CartPage from './pages/CartPage/CartPage';
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/CartPage" element={<CartPage />} />        
         <Route path="/messages" element={<MessagesPage />} /> 
         <Route path="/friends" element={<FriendsPage />} /> 
         <Route path='/share' element={<ShareBuilds />} /> 
