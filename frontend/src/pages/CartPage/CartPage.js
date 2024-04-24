@@ -63,18 +63,19 @@ function CartPage() {
                                         </div>
                                         <span>{part.name}</span>
                                         <span>{part.price}</span>
-                                        <div>
+                                        <div className="action-buttons-container">
                                             <button className="action-button" onClick={() => handleFindOnAmazon(part.name)}>Find on Amazon</button>
                                             <button className="action-button" onClick={() => handleSeeImage(part.name)}>See Image</button>
                                         </div>
                                     </li>
                                 ))}
+                                <hr className="divider2" /> {/* Divider line */}
                             </ul>
                         ) : (
                             <div className="sub-part-item">
                                 <span>{partGroup.name}</span>
                                 <span>{partGroup.price}</span>
-                                <div>
+                                <div className="action-buttons-container">
                                     <button className="action-button" onClick={() => handleFindOnAmazon(partGroup.name)}>Find on Amazon</button>
                                     <button className="action-button" onClick={() => handleSeeImage(partGroup.name)}>See Image</button>
                                 </div>
