@@ -55,22 +55,29 @@ function CartPage() {
                     <li key={partType} className="part-list-item">
                         <strong>{partType.toUpperCase()}:</strong>
                         {Array.isArray(partGroup) ? (
-                            <ul>
+                            <ul className="sub-part-list">
                                 {partGroup.map((part, index) => (
                                     <li key={index} className="sub-part-list-item">
-                                        {part.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {part.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <button className="action-button" onClick={() => handleFindOnAmazon(part.name)}>Find on Amazon</button>
-                                        <button className="action-button" onClick={() => handleSeeImage(part.name)}>See Image</button>
-                                        <button className="delete-button" onClick={() => handleDeleteSubPart(partType, index)}>X</button>
+                                        <div>
+                                            <button className="delete-button" onClick={() => handleDeleteSubPart(partType, index)}>X</button>
+                                        </div>
+                                        <span>{part.name}</span>
+                                        <span>{part.price}</span>
+                                        <div>
+                                            <button className="action-button" onClick={() => handleFindOnAmazon(part.name)}>Find on Amazon</button>
+                                            <button className="action-button" onClick={() => handleSeeImage(part.name)}>See Image</button>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
                             <div className="sub-part-item">
-                                {partGroup.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {partGroup.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button className="action-button" onClick={() => handleFindOnAmazon(partGroup.name)}>Find on Amazon</button>
-                                <button className="action-button" onClick={() => handleSeeImage(partGroup.name)}>See Image</button>
-                                <button className="delete-button" onClick={() => handleDeleteItem(partType)}>X</button>
+                                <span>{partGroup.name}</span>
+                                <span>{partGroup.price}</span>
+                                <div>
+                                    <button className="action-button" onClick={() => handleFindOnAmazon(partGroup.name)}>Find on Amazon</button>
+                                    <button className="action-button" onClick={() => handleSeeImage(partGroup.name)}>See Image</button>
+                                </div>
                             </div>
                         )}
                     </li>

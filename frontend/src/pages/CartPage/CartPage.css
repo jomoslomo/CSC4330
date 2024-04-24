@@ -1,4 +1,4 @@
-.cart-container {
+tainer {
     margin-left: 20px;
 }
 
@@ -23,29 +23,36 @@
 }
 
 .sub-part-list {
-    margin-left: 30px; /* Move the sublist 30px to the right */
+    margin-left: 20px; /* Adjust as needed */
     list-style-type: none;
     padding-left: 0;
 }
 
 .sub-part-list-item {
-    margin-left: 0; /* Set left margin to zero */
-    margin-top: 0; /* Reset top margin */
+    display: flex;
+    align-items: center; /* Align vertically */
+    justify-content: space-between; /* Distribute items evenly */
+    max-width: 60%;
+}
+
+.sub-part-list-item > * {
+    flex: 1; /* Distribute available space equally */
+    margin: 0; /* Reset margin */
 }
 
 .sub-part-item {
-    margin-left: 20px; /* Add left margin for sub-parts */
+    margin-left: 20px; /* Adjust as needed */
 }
 
 .delete-button {
     margin-left: 10px;
-    font-size: 12px;
-    padding: 5px 10px;
-    width: 40px;
+    font-size: 10px;
+    padding: 5px 5px;
+    width: 20px;
     background-color: red;
     color: white;
     border: none;
-    border-radius: 50%;
+    border-radius: 100%;
 }
 
 .action-button {
