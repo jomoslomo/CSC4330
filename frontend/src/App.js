@@ -1,6 +1,7 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import BuildWizard from './pages/BuildWizard/BuildWizard';
 import Header from './components/Header/Header'; // If you have a Header component
@@ -23,6 +24,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/CartPage" element={<CartPage />} />        
         <Route path="/messages" element={<MessagesPage />} /> 
         <Route path="/friends" element={<FriendsPage />} /> 
         <Route path='/share' element={<ShareBuilds />} /> 

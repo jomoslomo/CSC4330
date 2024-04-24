@@ -24,10 +24,8 @@ function RecipientSelector({ friends, selectedUserId, onUserSelect }) {
 function MessagesPage() {
   const [messages, setMessages] = useState([]);
   const [friends, setFriends] = useState([]); // State to store fetched friends
-  const [builds, setBuilds] = useState([]);
   const [messageContent, setMessageContent] = useState('');
   const [recipientId, setRecipientId] = useState(localStorage.getItem('selectedRecipientId') || ''); // Get the initial value from local storage
-  const [buildId, setBuildId] = useState('');
   const [feedback, setFeedback] = useState('');
   const loggedInUsername = localStorage.getItem('username'); // Retrieve logged-in username
 
@@ -39,7 +37,6 @@ function MessagesPage() {
   const fetchResources = async () => {
     fetchData('messages', setMessages);
     fetchData('friends/list', setFriends);
-    fetchData('user/builds', setBuilds);
   };
 
   const fetchData = async (endpoint, setter) => {
@@ -66,9 +63,7 @@ function MessagesPage() {
     };
 
     // Only add buildId to the payload if it has been set (i.e., it is not an empty string)
-    if (buildId) {
-        messagePayload.buildId = buildId;
-    }
+
 
     const response = await fetch('http://localhost:3001/messages', {
         method: 'POST',
@@ -83,7 +78,6 @@ function MessagesPage() {
         const newMessage = await response.json();
         setMessages(prevMessages => [...prevMessages, newMessage]);
         setMessageContent('');
-        setBuildId('');  // Reset build selection
         setFeedback('Message sent successfully.');
         window.location.reload();
 
@@ -126,16 +120,7 @@ function MessagesPage() {
             placeholder="Write your message here..."
             required
         />
-<select
-    value={buildId}
-    onChange={(e) => setBuildId(e.target.value)}
-    required={false}  // This ensures that the form can be submitted even if no build is selected
->
-    <option value="">Select a Build (Optional)</option>
-    {builds.map((build) => (
-        <option key={build._id} value={build._id}>{build.build_name}</option>
-    ))}
-</select>
+
 
         <button type="submit">Send</button>
     </form>
