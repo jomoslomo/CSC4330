@@ -4,8 +4,10 @@ import './BuildWizard.css';
 import SearchBar from './SearchBar';
 import checkCompatibility from '../../components/BuildWizardSteps/Compatibility';
 import axios from 'axios'; // Make sure to install axios via npm or yarn
+import { useNavigate } from 'react-router-dom';
 
 function BuildWizard() {
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedParts, setSelectedParts] = useState({
         motherboard: [],
@@ -50,6 +52,7 @@ function BuildWizard() {
         { type: 'motherboard', fetchUrl: 'http://localhost:3001/motherboards', component: SelectPart },
         { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
         { type: 'ram', fetchUrl: 'http://localhost:3001/memory', component: SelectPart },
+        { type: 'storage', fetchUrl: 'http://localhost:3001/internal-hdds', component: SelectPart },
         { type: 'storage', fetchUrl: 'http://localhost:3001/internal-hdds', component: SelectPart },
         { type: 'gpu', fetchUrl: 'http://localhost:3001/gpus', component: SelectPart },
         { type: 'psu', fetchUrl: 'http://localhost:3001/psus', component: SelectPart },
@@ -142,10 +145,12 @@ function BuildWizard() {
                     fetchUrl={stepConfig.fetchUrl}
                     partType={stepConfig.type.toUpperCase()}
                     searchTerm={searchTerm}
+                    searchTerm={searchTerm}
                 />
             </>
         );
     };
+
 
     const saveBuild = async () => {
         // The endpoint where builds are saved
@@ -222,7 +227,7 @@ function BuildWizard() {
                     {currentStep === steps.length && (
                         <>
                             <button onClick={saveBuild}>Save Build</button>
-                            <button>Finish</button>
+                            <button onClick={() => navigate('/CartPage', { state: { selectedParts } })}>Finish</button>
                         </>
                     )}
                 </div>
