@@ -2,7 +2,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import BuildWizard from './pages/BuildWizard/BuildWizard';
 import Header from './components/Header/Header'; // If you have a Header component
@@ -12,6 +11,7 @@ import UserDashboard from './pages/UserDashboard/UserDashboard';
 import MessagesPage from './pages/MessagesPage/MessagesPage'; // Import the MessagesPage component
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import ShareBuilds from './pages/ShareBuildsPage/ShareBuildsPage';
+import PasswordReset from './pages/PasswordReset/PasswordReset';
 // Inside your Router and Routes component:
 import CartPage from './pages/CartPage/CartPage';
 function App() {

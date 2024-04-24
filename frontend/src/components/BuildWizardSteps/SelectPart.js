@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './SelectPart.css'; // Ensure this is the correct path
+import caseImage from './assets/case.png';
+import CpuImage from './assets/cpu.png';
+import GpuImage from './assets/gpu.png';
+import MotherboardImage from './assets/motherboard.png';
+import PsuImage from './assets/psu.png';
+import RamImage from './assets/ram.png';
+import StorageImage from './assets/storage.png';
 
 function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAttributes }) {
     const [parts, setParts] = useState([]);
@@ -39,6 +46,7 @@ function SelectPart({ onSelect, currentSelection, fetchUrl, partType, displayAtt
                     {displayAttributes && displayAttributes.map(attr => (
                         <p key={attr}>{`${attr.charAt(0).toUpperCase() + attr.slice(1)}: ${part[attr]}`}</p>
                     ))}
+                    <img src={part.imageUrl} alt={part.name} className="partImage" />
                 </div>
             ))}
             {loadMore && <button onClick={handleLoadMore}>Load More</button>}
