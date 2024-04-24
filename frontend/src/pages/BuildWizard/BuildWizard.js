@@ -3,6 +3,14 @@ import SelectPart from '../../components/BuildWizardSteps/SelectPart';
 import './BuildWizard.css';
 import axios from 'axios'; // Make sure to install axios via npm or yarn
 import { useNavigate } from 'react-router-dom';
+import caseImage from './assets/case.png';
+import CpuImage from './assets/cpu.png';
+import GpuImage from './assets/gpu.png';
+import MotherboardImage from './assets/motherboard.png';
+import PsuImage from './assets/psu.png';
+import RamImage from './assets/ram.png';
+import StorageImage from './assets/storage.png';
+import DefaultImage from './assets/default.jpg';
 
 function BuildWizard() {
     const navigate = useNavigate();
@@ -62,14 +70,53 @@ function BuildWizard() {
         const stepConfig = steps[currentStep - 1];
         if (!stepConfig) return <div>Step not found</div>;
 
+
+    let imageUrl; 
+    switch (stepConfig.type) {
+        case 'motherboard':
+            imageUrl = MotherboardImage; 
+            break;
+        case 'cpu':
+            imageUrl = CpuImage; 
+            break;
+        case 'psu':
+            imageUrl = RamImage;
+            break;
+        case 'case':
+            imageUrl = caseImage;
+            break;
+        case 'ram':
+            imageUrl = RamImage;
+            break;
+        case 'storage':
+            imageUrl = StorageImage;
+            break;
+        default:
+            imageUrl = DefaultImage; // Set a default image URL if no specific image is available
+    }
+        // Define default images for each part type
+        const defaultImages = {
+            motherboard: MotherboardImage,
+            cpu: CpuImage,
+            gpu: GpuImage,
+            psu: PsuImage,
+            ram: RamImage,
+            storage: StorageImage,
+            case: caseImage,
+        };
+       const defaultImageUrl = defaultImages[stepConfig.type];
         return (
             <>
                 <h2>Selecting: {stepConfig.type.toUpperCase()}</h2>
+                <div>
+                <img src={defaultImageUrl} alt={stepConfig.type} className="partImage" />
+            </div>
                 <SelectPart
                     onSelect={handleSelectPart}
                     currentSelection={selectedParts[stepConfig.type]}
                     fetchUrl={stepConfig.fetchUrl}
                     partType={stepConfig.type.toUpperCase()}
+                    imageUrl={imageUrl}
                 />
             </>
         );
