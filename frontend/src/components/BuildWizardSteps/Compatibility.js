@@ -7,32 +7,11 @@ function checkCompatibility(part, selectedParts, step) {
     if(part && selectedParts)
     {
 
-    // ================== CPU constraints ==========================================
-    if(step === 2){
-        if(selectedParts.cpu.length > 0 && step === 1) {
-            return {passes: false, reason: '1'};
-        }
-
-        //constraints if a motherboard is selected first
-        if(selectedParts.motherboard.length !== 0) {
-            const core = part.name[0];
-            const socket = selectedParts.motherboard.socket;
-
-            if(core === 'I' && socket !== 'LGA1700') {
-             return {passes: false, reason: '10'};
-            }
-            else if(core === 'A' && (socket === 'LGA1700')) {
-                return {passes: false, reason: '11'};
-            }
-        }
-    }
-    // ===============================================================================
-
     // ================== Motherboard constraints ===================================
     if(step === 1) {
 
-        if(selectedParts.motherboard.length > 0 && step === 2) {
-            return {passes: false, reason: '2'};
+        if(selectedParts.motherboard.length > 0 && step === 1) {
+            return {passes: false, reason: '1'};
         }
 
         //constraints if a cpu is selected
@@ -63,6 +42,29 @@ function checkCompatibility(part, selectedParts, step) {
     }
     // ==============================================================================
         
+    // ================== CPU constraints ==========================================
+    if(step === 2){
+        if(selectedParts.cpu.length > 0 && step === 2) {
+            return {passes: false, reason: '2'};
+        }
+
+        //constraints if a motherboard is selected first
+        if(selectedParts.motherboard.length !== 0) {
+            const core = part.name[0];
+            const socket = selectedParts.motherboard.socket;
+
+            if(core === 'I' && socket !== 'LGA1700') {
+             return {passes: false, reason: '10'};
+            }
+            else if(core === 'A' && (socket === 'LGA1700')) {
+                return {passes: false, reason: '11'};
+            }
+        }
+    }
+    // ===============================================================================
+
+
+
     // ================== RAM constraints =============================================
     if(step === 3) {
         let mem = getTotalMemoryStep3(part, selectedParts);
@@ -82,7 +84,7 @@ function checkCompatibility(part, selectedParts, step) {
         }
     }
     // ================================================================================
-
+    console.log(step);
     // ================== Storage constraints ==========================================
     if(step === 4) {
 
@@ -106,7 +108,7 @@ function checkCompatibility(part, selectedParts, step) {
     // ================== PSU constraints ==============================================
     if(step === 6) {
 
-        if(selectedParts.psu.length > 0 && step === 6) {
+        if(selectedParts.psu.length > 0) {
             return {passes: false, reason: '8'};
         }
     }
@@ -116,7 +118,7 @@ function checkCompatibility(part, selectedParts, step) {
     // ================== Case constraints =============================================
     if(step === 7) {
 
-        if(selectedParts.case.length > 0 && step === 7) {
+        if(selectedParts.case.length > 0) {
             return {passes: false, reason: '9'};
         }
     }

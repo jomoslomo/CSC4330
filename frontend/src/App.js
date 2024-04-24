@@ -10,6 +10,7 @@ import UserDashboard from './pages/UserDashboard/UserDashboard';
 import MessagesPage from './pages/MessagesPage/MessagesPage'; // Import the MessagesPage component
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import ShareBuilds from './pages/ShareBuildsPage/ShareBuildsPage';
+import BuildGuides from './pages/BuildGuides/BuildGuides';
 // Inside your Router and Routes component:
 import CartPage from './pages/CartPage/CartPage';
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/friends" element={<FriendsPage />} /> 
         <Route path='/share' element={<ShareBuilds />} /> 
         <Route path="/CartPage" element={<CartPage />} />
+        <Route path="/buildguides" element={<BuildGuides />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>

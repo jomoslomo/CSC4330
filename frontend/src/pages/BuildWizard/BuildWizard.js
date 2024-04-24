@@ -52,8 +52,7 @@ function BuildWizard() {
         { type: 'motherboard', fetchUrl: 'http://localhost:3001/motherboards', component: SelectPart },
         { type: 'cpu', fetchUrl: 'http://localhost:3001/cpus', component: SelectPart },
         { type: 'ram', fetchUrl: 'http://localhost:3001/memory', component: SelectPart },
-        { type: 'storage', fetchUrl: 'http://localhost:3001/internal-hdds', component: SelectPart },
-        { type: 'storage', fetchUrl: 'http://localhost:3001/internal-hdds', component: SelectPart },
+        { type: 'storage', fetchUrl: 'http://localhost:3001/internal-hdds', component: SelectPart }, 
         { type: 'gpu', fetchUrl: 'http://localhost:3001/gpus', component: SelectPart },
         { type: 'psu', fetchUrl: 'http://localhost:3001/psus', component: SelectPart },
         { type: 'case', fetchUrl: 'http://localhost:3001/cases', component: SelectPart },
@@ -79,10 +78,10 @@ function BuildWizard() {
                     alert("The selected part is not compatible with your build!");
                     break;
                 case '1':
-                    alert("You can only select one CPU for your build!");
+                    alert("You can only select one motherboard for your build!");
                     break;
                 case '2':
-                    alert("You can only select one motherboard for your build!");
+                    alert("You can only select one CPU for your build!");
                     break;
                 case '3': 
                     alert("You have exceeded the maximum amount of RAM allowed!");
@@ -144,7 +143,6 @@ function BuildWizard() {
                     currentSelection={selectedParts[stepConfig.type]}
                     fetchUrl={stepConfig.fetchUrl}
                     partType={stepConfig.type.toUpperCase()}
-                    searchTerm={searchTerm}
                     searchTerm={searchTerm}
                 />
             </>
