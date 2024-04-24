@@ -179,29 +179,37 @@ app.post('/user/builds', verifyToken, async (req, res) => {
         const userId = req.user.userId;
         const { build_name, components } = req.body;
 
-        // Construct the build object
+        // Construct the build object with a unique _id
         const build = {
+            _id: new ObjectId(), // This generates a new unique identifier for each build
             build_name: build_name,
-            components: components
+            components: components,
+            user_id: new ObjectId(userId) // Include the user ID in the build document
         };
 
+        // Insert the build into the builds collection
+        const buildResult = await db.collection('builds').insertOne(build);
+        console.log("Build insertion result:", buildResult); // Log the result of the build insertion
+
         // Update the user document to add the build to the builds array
-        const result = await db.collection('users').updateOne(
+        const userUpdateResult = await db.collection('users').updateOne(
             { "_id": new ObjectId(userId) },
             { $push: { builds: build } }
         );
+        console.log("User update result:", userUpdateResult); // Log the result of the user update
 
-        // Check if the update was successful
-        if (result.modifiedCount === 1) {
-            res.status(201).json({ message: 'User build created successfully' });
+        // Check if both the build insertion and user update were successful
+        if (buildResult.acknowledged && userUpdateResult.modifiedCount === 1) {
+            res.status(201).json({ message: 'User build created successfully', buildId: build._id });
         } else {
             res.status(500).json({ message: 'Failed to create user build' });
         }
     } catch (error) {
         console.error("Failed to create user build", error);
-        res.status(500).json({ message: "Failed to create user build" });
+        res.status(500).json({ message: "Failed to create user build", errorDetails: error.message });
     }
 });
+
 
 // Endpoint to get user builds
 app.get('/user/builds', verifyToken, async (req, res) => {
@@ -224,7 +232,66 @@ app.get('/user/builds', verifyToken, async (req, res) => {
 });
 
 
+app.post('/share-build', verifyToken, async (req, res) => {
+    const { buildId, recipientUsername } = req.body;
+    const ownerId = req.user.userId;
 
+    try {
+        // Confirm the build exists and belongs to the logged-in user
+        const build = await db.collection('builds').findOne({ _id: new ObjectId(buildId), user_id: new ObjectId(ownerId) });
+        if (!build) {
+            return res.status(404).json({ message: "Build not found or access denied" });
+        }
+
+        // Get recipient user data
+        const recipient = await db.collection('users').findOne({ username: recipientUsername });
+        if (!recipient) {
+            return res.status(404).json({ message: "Recipient user not found" });
+        }
+
+        // Check for existing share to prevent duplicates
+        const existingShare = await db.collection('sharedBuilds').findOne({ buildId: new ObjectId(buildId), recipientId: recipient._id });
+        if (existingShare) {
+            return res.status(409).json({ message: "Build already shared with this user" });
+        }
+
+        // Create the share
+        const share = {
+            buildId: new ObjectId(buildId),
+            ownerId: new ObjectId(ownerId),
+            recipientId: recipient._id,
+            sharedAt: new Date()
+        };
+        await db.collection('sharedBuilds').insertOne(share);
+
+        res.status(201).json({ message: "Build shared successfully" });
+    } catch (error) {
+        console.error("Error sharing build:", error);
+        res.status(500).json({ message: "Error sharing build", error: error.message });
+    }
+});
+
+app.get('/received-builds', verifyToken, async (req, res) => {
+    const recipientId = req.user.userId;
+
+    try {
+        // Fetch all builds shared with the logged-in user
+        const shares = await db.collection('sharedBuilds').find({ recipientId: new ObjectId(recipientId) }).toArray();
+        if (!shares.length) {
+            return res.status(404).json({ message: "No builds shared with you" });
+        }
+
+        // Optionally, fetch detailed information about each shared build
+        const builds = await Promise.all(shares.map(async (share) => {
+            return await db.collection('builds').findOne({ _id: share.buildId });
+        }));
+
+        res.status(200).json(builds);
+    } catch (error) {
+        console.error("Error retrieving shared builds:", error);
+        res.status(500).json({ message: "Error retrieving shared builds", error: error.message });
+    }
+});
 
 
 // Endpoint to get messages for the authenticated user
@@ -312,74 +379,6 @@ app.post('/messages', verifyToken, async (req, res) => {
         res.status(500).json({ message: "Failed to send message" });
     }
 });
-
-app.post('/user/builds/share', verifyToken, async (req, res) => {
-    const { buildId, recipientUsername } = req.body;
-    const senderId = req.user.userId;
-
-    try {
-        // Check if the build exists and belongs to the sender
-        const build = await db.collection('users').findOne({ _id: new ObjectId(senderId), "builds._id": new ObjectId(buildId) });
-        if (!build) {
-            return res.status(404).json({ message: "Build not found or does not belong to you" });
-        }
-
-        // Find the recipient by username
-        const recipient = await db.collection('users').findOne({ username: recipientUsername });
-        if (!recipient) {
-            return res.status(404).json({ message: "Recipient user not found" });
-        }
-
-        // Check if the build is already shared with the recipient
-        const isAlreadyShared = await db.collection('sharedBuilds').findOne({
-            buildId: new ObjectId(buildId),
-            recipientId: recipient._id
-        });
-
-        if (isAlreadyShared) {
-            return res.status(409).json({ message: "Build already shared with this user" });
-        }
-
-        // Share the build
-        await db.collection('sharedBuilds').insertOne({
-            buildId: new ObjectId(buildId),
-            ownerId: new ObjectId(senderId),
-            recipientId: recipient._id,
-            sharedAt: new Date()
-        });
-
-        res.status(201).json({ message: "Build shared successfully" });
-    } catch (error) {
-        console.error("Error sharing the build", error);
-        res.status(500).json({ message: "Failed to share the build" });
-    }
-});
-
-app.get('/user/builds/shared', verifyToken, async (req, res) => {
-    const recipientId = req.user.userId;
-
-    try {
-        const sharedBuilds = await db.collection('sharedBuilds').find({ recipientId: new ObjectId(recipientId) }).toArray();
-        if (!sharedBuilds.length) {
-            return res.status(404).json({ message: "No builds shared with you" });
-        }
-
-        // Retrieve detailed information about each shared build
-        const builds = await Promise.all(sharedBuilds.map(async (entry) => {
-            const buildDetails = await db.collection('users').findOne(
-                { "_id": entry.ownerId, "builds._id": entry.buildId },
-                { projection: { "builds.$": 1 } }
-            );
-            return buildDetails.builds[0];
-        }));
-
-        res.json(builds);
-    } catch (error) {
-        console.error("Failed to retrieve shared builds", error);
-        res.status(500).json({ message: "Failed to retrieve shared builds" });
-    }
-});
-
 
 
 // Search for users by username
@@ -547,6 +546,7 @@ app.get('/friends/requests', verifyToken, async (req, res) => {
 
 
 
+// ...
 
 // Endpoint to get a user's friend list
 app.get('/friends/list', verifyToken, async (req, res) => {

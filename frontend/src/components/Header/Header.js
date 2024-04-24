@@ -74,7 +74,7 @@ function Header() {
                 <Link to="/logout" onClick={handleLogout}>Logout</Link>
                 <Link to="/messages">Messages</Link>
                 <Link to="/friends">Friends</Link>
-
+                <Link to="/share">Share</Link>
             </div>
         ) : (
             <div className="authLinks">
