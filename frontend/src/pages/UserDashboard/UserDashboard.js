@@ -47,6 +47,9 @@ function UserDashboard() {
         fetchUserInfo();
     }, []);
 
+
+
+
     // Conditional rendering logic
     if (!userInfo) {
         return <p>Loading user information...</p>;
@@ -54,9 +57,15 @@ function UserDashboard() {
 
     return (
         <div className="dashboard-container">
+
+
+            
             <h2>User Dashboard</h2>
             <p>Welcome to your dashboard, {userInfo.username}!</p>
             <h3>Your Builds</h3>
+
+
+
             {userBuilds.length ? (
                 <div className="builds-container">
                     {userBuilds.map((build) => (
@@ -75,6 +84,7 @@ function UserDashboard() {
                 <p>You have no builds.</p>
             )}
         </div>
+        
     );
 }
 

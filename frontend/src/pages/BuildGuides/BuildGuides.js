@@ -40,6 +40,8 @@ function BuildGuides() {
 
             <div className="types-row">
             <div className="type">
+                    
+                    <img className="controller" src="https://image.shutterstock.com/image-photo/stock-vector-minimal-gaming-symbol-stream-modern-games-wireless-controller-icon-vector-250nw-1726514476.jpg"/>
                     <h2>New Gamers</h2>
                     <p>Are you just starting your journey into the exciting world of PC gaming? 
                         Welcome aboard! For new players, we recommend starting with a build that 
@@ -50,6 +52,8 @@ function BuildGuides() {
                         build a solid gaming rig that will serve you well as you dive into the world of PC gaming.</p>
                 </div>
                 <div className="type">
+
+                    <img className="headset" src="https://t3.ftcdn.net/jpg/04/12/64/42/360_F_412644208_F7LB2yYrsRnYz77cJwr1Rc4DUuffsCfx.jpg"/>
                     <h2>Casual Gamers</h2>
                     <p>Are you a nightly gamer who enjoys unwinding with your favorite titles after a long day?
                          We've got the perfect builds to enhance your gaming experience without breaking the budget.
@@ -59,6 +63,8 @@ function BuildGuides() {
                              provides hours of entertainment without compromise.</p>
                 </div>
                 <div className="type">
+
+                    <img className="sword" src="https://static.vecteezy.com/system/resources/previews/002/628/343/non_2x/crossed-swords-icon-illustration-free-vector.jpg"/>
                     <h2>Competitive Gamers</h2>
                     <p>Do you thrive on the thrill of competition and strive for victory in every match? When it comes to
                          competitive gaming, every millisecond counts. For competitive gamers, we recommend investing in
@@ -68,6 +74,8 @@ function BuildGuides() {
                              allowing you to rise through the ranks and achieve your full gaming potential.</p>
                 </div>
                 <div className ="type">
+
+                    <img className="streamer" src="https://cdn-icons-png.flaticon.com/512/2201/2201318.png"/>
                     <h2>The Streamer</h2>
                     <p>Are you an aspiring streamer? A reliable PC is essential for high-quality streams while maintaining smooth
                          gameplay. Invest in a powerful CPU for streaming software and multitasking, paired with a graphics card

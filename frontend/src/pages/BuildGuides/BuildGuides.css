@@ -29,13 +29,14 @@
     justify-content: space-between;
     width: 100%;
     padding: 20px;
+    border: 1px solid #282c34;
 }
 
 .type {
     flex: 1;
     text-align: center;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #282c34;
     border-radius: 5px;
 }
 
@@ -53,10 +54,27 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
+    border: solid #282c34;
 }
 
 .middle-column {
     width: 100%;
     text-align: center;
     margin-top: 40px;
+}
+
+.sword{
+    width: 150px;
+}
+
+.controller{
+    width: 150px;
+}
+
+.headset{
+    width: 150px;
+}
+
+.streamer{
+    width: 150px;
 }
