@@ -1,23 +1,78 @@
-/* CartPage.css */
-.cart-page {
-    text-align: center;
-    padding: 20px;
+.cart-container {
+    margin-left: 20px;
 }
 
-.cart-page ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.cart-page li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px; /* Add spacing between list items */
-}
-
-.cart-page li img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+.cart-heading {
     margin-left: 10px;
+}
+
+.selected-parts-heading {
+    margin-left: 20px;
+}
+
+.part-list {
+    margin-left: 50px; /* Move the main list 30px to the right */
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.part-list-item {
+    display: flex;
+    align-items: left;
+    flex-direction: column; /* Stack sub-parts vertically */
+}
+
+.sub-part-list {
+    margin-left: 30px; /* Move the sublist 30px to the right */
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sub-part-list-item {
+    margin-left: 0; /* Set left margin to zero */
+    margin-top: 0; /* Reset top margin */
+}
+
+.sub-part-item {
+    margin-left: 20px; /* Add left margin for sub-parts */
+}
+
+.delete-button {
+    margin-left: 10px;
+    font-size: 12px;
+    padding: 5px 10px;
+    width: 40px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+}
+
+.action-button {
+    margin-left: 10px;
+    font-size: 12px;
+    padding: 5px 10px;
+    width: 100px;
+}
+
+.divider {
+    width: 70%;
+    text-align: left;
+    margin-left: 0;
+}
+
+.total-price-text {
+    margin-left: 40px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.total-price {
+    margin-left: 250px;
+}
+
+.part-image {
+    margin-top: 20px;
+    max-width: 100%;
+    max-height: 300px;
 }

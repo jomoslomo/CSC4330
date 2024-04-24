@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import './CartPage.css'; // Import CSS file for component-specific styles
 
 function CartPage() {
     const location = useLocation();
@@ -26,74 +27,61 @@ function CartPage() {
         setSelectedParts(updatedParts);
     };
 
+    const handleDeleteSubPart = (partType, index) => {
+        const updatedParts = { ...selectedParts };
+        updatedParts[partType] = selectedParts[partType].filter((_, i) => i !== index);
+        setSelectedParts(updatedParts);
+    };
+
     // Function to calculate total price
     const calculateTotalPrice = () => {
         let totalPrice = 0;
-        Object.values(selectedParts).forEach(part => {
-            if (Array.isArray(part)) {
-                part.forEach(p => totalPrice += p.price);
+        Object.values(selectedParts).forEach(partGroup => {
+            if (Array.isArray(partGroup)) {
+                partGroup.forEach(part => totalPrice += part.price);
             } else {
-                totalPrice += part.price;
+                totalPrice += partGroup.price;
             }
         });
         return totalPrice.toFixed(2); // Fix to two decimal places
     };
 
     return (
-        <div>
-            <h1 style={{ marginLeft: '20px' }}>Cart</h1>
-            <h2 style={{ marginLeft: '40px' }}>Selected Parts</h2>
-            <ul>
-                {Object.entries(selectedParts).map(([partType, part]) => (
-                    <li key={partType} style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="cart-container">
+            <h1 className="cart-heading">Cart</h1>
+            <h2 className="selected-parts-heading">Selected Parts</h2>
+            <ul className="part-list">
+                {Object.entries(selectedParts).map(([partType, partGroup]) => (
+                    <li key={partType} className="part-list-item">
                         <strong>{partType.toUpperCase()}:</strong>
-                        {Array.isArray(part) ? (
+                        {Array.isArray(partGroup) ? (
                             <ul>
-                                {part.map(p => (
-                                    <li key={p.name} style={{ marginLeft: '10px' }}>
-                                        {p.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {p.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                {partGroup.map((part, index) => (
+                                    <li key={index} className="sub-part-list-item">
+                                        {part.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {part.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button className="action-button" onClick={() => handleFindOnAmazon(part.name)}>Find on Amazon</button>
+                                        <button className="action-button" onClick={() => handleSeeImage(part.name)}>See Image</button>
+                                        <button className="delete-button" onClick={() => handleDeleteSubPart(partType, index)}>X</button>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
-                            <div style={{ marginLeft: '10px' }}>
-                                {part.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {part.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <div className="sub-part-item">
+                                {partGroup.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: {partGroup.price}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button className="action-button" onClick={() => handleFindOnAmazon(partGroup.name)}>Find on Amazon</button>
+                                <button className="action-button" onClick={() => handleSeeImage(partGroup.name)}>See Image</button>
+                                <button className="delete-button" onClick={() => handleDeleteItem(partType)}>X</button>
                             </div>
                         )}
-                        <button
-                            style={{ marginLeft: '10px', fontSize: '12px', padding: '5px 10px', width: '40px', backgroundColor: 'red', color: 'white', borderRadius: '50%' }}
-                            onClick={() => handleDeleteItem(partType)}
-                        >
-                            X
-                        </button>
-                        <button
-                            style={{ marginLeft: '10px', fontSize: '12px', padding: '5px 10px', width: '100px' }}
-                            onClick={() => handleFindOnAmazon(Array.isArray(part) ? part[0].name : part.name)}
-                        >
-                            Find on Amazon
-                        </button>
-                        <button
-                            style={{ marginLeft: '10px', fontSize: '12px', padding: '5px 10px', width: '100px' }}
-                            onClick={() => handleSeeImage(Array.isArray(part) ? part[0].name : part.name)}
-                        >
-                            See Image
-                        </button>
                     </li>
                 ))}
             </ul>
-            <div style={{ width: '50%', textAlign: 'left' }}>
-                <hr />
-            </div>
-            <p style={{ marginLeft: '40px', marginTop: '20px', fontWeight: 'bold' }}>Total Price: <span style={{ marginLeft: '250px' }}>${calculateTotalPrice()}</span></p>
+            <hr className="divider" /> {/* Divider line */}
+            <p className="total-price-text">Total Price: <span className="total-price">${calculateTotalPrice()}</span></p>
             {imageSrc && (
                 <div>
-                    <img src={imageSrc} alt="Part" style={{ marginTop: '20px', maxWidth: '100%', maxHeight: '300px' }} />
-                    <button
-                        style={{ marginLeft: '10px', fontSize: '12px', padding: '5px 10px', width: '100px' }}
-                        onClick={handleUnseeImage}
-                    >
-                        Unsee Image
-                    </button>
+                    <img src={imageSrc} alt="Part" className="part-image" />
+                    <button className="action-button" onClick={handleUnseeImage}>Unsee Image</button>
                 </div>
             )}
         </div>

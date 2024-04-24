@@ -116,3 +116,59 @@
     border-radius: 4px; /* Add rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
 }
+.search {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.search label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.search input[type="text"] {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px; /* Comfortable padding */
+    font-size: 14px; /* Adequate font size for readability */
+    border: 2px solid #ccc; /* Subtle border */
+    border-radius: 4px; /* Rounded corners for modern appearance */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Inner shadow for depth */
+    transition: border-color 0.25s ease-in-out; /* Smooth transition for border color */
+}
+
+.search input[type="text"]:focus {
+    border-color: #007bff; /* Highlight color when focused */
+    outline: none; /* Remove default focus outline */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(0,123,255,0.6); /* Enhanced focus effect */
+}
+
+.search input[type="text"]:hover {
+    border-color: #007bff; /* Highlight color when hovered */
+}
+
+
+.selectedPart {
+    display: flex;
+    flex-direction: column; /* Arrange children vertically */
+    background-color: #fff; /* White background for each part */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px; /* Rounded corners for each part */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for each part */
+    transition: transform 0.2s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.selectedPart button {
+    background-color: #dc3545; /* Red */
+    color: white;
+    padding: 5px 10px; /* Adjust padding for smaller button */
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-end; /* Align button to the end of the container */
+}
+
+.selectedPart button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}

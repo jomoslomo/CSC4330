@@ -29,6 +29,7 @@ function App() {
         <Route path="/messages" element={<MessagesPage />} /> 
         <Route path="/friends" element={<FriendsPage />} /> 
         <Route path='/share' element={<ShareBuilds />} /> 
+        <Route path="/CartPage" element={<CartPage />} />
         {/* Add more routes as needed */}
       </Routes>
     </Router>

@@ -9,7 +9,7 @@ import RamImage from './assets/ram.png';
 import StorageImage from './assets/storage.png';
 function SelectCPU({ onSelect, currentSelection }) {
     // Define the attributes you want to display for CPUs
-    const displayAttributes = ['price', 'cores', 'baseClock'];
+    const displayAttributes = ['price', 'core_count', 'core_clock', 'boost_clock', 'tdp', 'graphics', 'smt'];
 
     return (
         <SelectPart
